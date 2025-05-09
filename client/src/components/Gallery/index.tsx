@@ -1,5 +1,14 @@
+import { tempItems } from "@/lib/dummyData";
+import GalleryItems from "./GalleryItems";
+
 const Gallery = () => {
-  return <div>Gallery</div>;
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
+      {tempItems.map((data, i) => (
+        <GalleryItems item={data} key={i} />
+      ))}
+    </div>
+  );
 };
 
 export default Gallery;
