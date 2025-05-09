@@ -11,10 +11,10 @@ import {
 const UserDropDown = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <IoIosArrowDown className="cursor-pointer" width={16} height={16} />
+      <DropdownMenuTrigger className="border border-zinc-500 rounded-md p-1 shadow shadow-zinc-500">
+        <IoIosArrowDown className="cursor-pointer w-4 h-4" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="shadow-md shadow-zinc-500 border border-zinc-500">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
