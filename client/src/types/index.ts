@@ -10,3 +10,9 @@ export type ThemeProviderState = {
     theme: Theme
     setTheme: (theme: Theme) => void
 }
+
+export interface TempItems {
+    imageUrl: string;
+    width: number;
+    height: number;
+}
