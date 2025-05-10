@@ -12,6 +12,7 @@ export type ThemeProviderState = {
 }
 
 export interface TempItems {
+    id: number
     imageUrl: string;
     width: number;
     height: number;
