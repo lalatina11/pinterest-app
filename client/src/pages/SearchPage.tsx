@@ -1,5 +1,13 @@
+import Gallery from "@/components/Gallery";
+import Metadata from "@/components/Metadata";
+
 const SearchPage = () => {
-  return <div>SearchPage</div>;
+  return (
+    <>
+      <Metadata title={`Pin | Search`} />
+      <Gallery />
+    </>
+  );
 };
 
 export default SearchPage;
