@@ -2,6 +2,7 @@ import { RxAvatar } from "react-icons/rx";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { buttonVariants } from "../ui/button";
 import UserDropDown from "./UserDropDown";
+import { Link } from "react-router";
 
 const UserMenu = () => {
   const currentUser = true;
@@ -17,9 +18,9 @@ const UserMenu = () => {
     </div>
   ) : (
     <div>
-      <a href="/" className={"" + buttonVariants({ variant: "default" })}>
+      <Link to="/" className={"" + buttonVariants({ variant: "default" })}>
         Login
-      </a>
+      </Link>
     </div>
   );
 };
