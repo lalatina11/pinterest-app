@@ -154,17 +154,5 @@ export const tempItems: TempItems[] = [
     width: 1260,
     height: 1260,
   },
-  {
-    id: 26,
-    imageUrl: "/Pins/pin26.jpeg",
-    width: 1260,
-    height: 1260,
-  },
-  {
-    id: 27,
-    imageUrl: "/Pins/pin27.jpeg",
-    width: 1260,
-    height: 1260,
-  },
 ];
 
