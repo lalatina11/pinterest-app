@@ -11,12 +11,17 @@ interface Props {
 }
 const GalleryItems = (props: Props) => {
   const { item, itemId } = props;
+
+  const Imagewidth = 372;
+
+  const optimizeHeight = (Imagewidth * item.height) / item.width;
+
   return (
     <div
       className="relative flex transition-all ease-in-out duration-300 cursor-pointer galleryItem"
       style={{ gridRowEnd: `span ${Math.ceil(item.height / 100)}` }}
     >
-      <ImageRenderer imageUrl={item.imageUrl} />
+      <ImageRenderer imageUrl={item.imageUrl} height={optimizeHeight} />
       <Link
         className="overlay absolute top-0 w-full h-full"
         to={`/pin/${itemId}`}
