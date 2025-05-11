@@ -17,7 +17,6 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <ToasterProvider />
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
@@ -30,7 +29,8 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/auth" element={<AuthPage />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
-        </Routes>{" "}
+        </Routes>
+        <ToasterProvider />
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
