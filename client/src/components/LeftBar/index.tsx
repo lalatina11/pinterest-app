@@ -10,7 +10,7 @@ const navItem = [
     name: "logo",
     href: "/",
     element: (
-      <img className="w-6 h-6 object-cover" src="logo-pin.svg" alt="Logo" />
+      <img className="w-6 h-6 object-cover" src="/logo-pin.svg" alt="Logo" />
     ),
   },
   {
