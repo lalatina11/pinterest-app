@@ -13,9 +13,12 @@ interface Props {
 const Avatar = (props: Props) => {
   return (
     <AvatarShadcn>
-      <AvatarImage className={props.className} src={props.avatarUrl} />
+      <AvatarImage
+        className={props.className || "w-8 h-8"}
+        src={props.avatarUrl}
+      />
       <AvatarFallback>
-        <RxAvatar className={props.className} />
+        <RxAvatar className={props.className || "w-8 h-8"} />
       </AvatarFallback>
     </AvatarShadcn>
   );
