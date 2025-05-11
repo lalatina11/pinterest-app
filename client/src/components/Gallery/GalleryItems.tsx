@@ -1,7 +1,7 @@
 import type { TempItems } from "@/types";
 import { CiCircleMore, CiSaveDown2 } from "react-icons/ci";
 import { FaShareAlt } from "react-icons/fa";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 import "./galleryItems.css";
 import ImageRenderer from "./ImageRenderer";
 
@@ -22,7 +22,7 @@ const GalleryItems = (props: Props) => {
       style={{ gridRowEnd: `span ${Math.ceil(item.height / 100)}` }}
     >
       <ImageRenderer imageUrl={item.imageUrl} height={optimizeHeight} />
-      <Link
+      <NavLink
         className="overlay absolute top-0 w-full h-full"
         to={`/pin/${itemId}`}
       />
