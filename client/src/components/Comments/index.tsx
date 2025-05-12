@@ -22,7 +22,10 @@ const Comments = () => {
         </span>
         <>
           <div className="flex gap-2 items-center justify-between pr-0 md:pr-5 lg:pr-10">
-            <NavLink to={`profile/john`} className="flex gap-2 items-center">
+            <NavLink
+              to={`/profile/johndoe`}
+              className="flex gap-2 items-center"
+            >
               <Avatar avatarUrl="" />
               <span>John Doe</span>
             </NavLink>
@@ -35,7 +38,7 @@ const Comments = () => {
       <div className="w-full h-[1px] mb-4 bg-zinc-500" />
       {/* Add Comment */}
       <div className="flex gap-2">
-        <NavLink to={`/john`}>
+        <NavLink to={`/profile/john`}>
           <Avatar avatarUrl="" />
         </NavLink>
         <form

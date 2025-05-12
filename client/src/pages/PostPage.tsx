@@ -31,7 +31,10 @@ const PostPage = () => {
           </div>
           <div className="flex flex-col gap-4 flex-1/3">
             <PostInterraction />
-            <NavLink to={"/john"} className="flex gap-2 items-center w-fit">
+            <NavLink
+              to={"/profile/johndoe"}
+              className="flex gap-2 items-center w-fit"
+            >
               <Avatar avatarUrl="" className="w-8 h-8" />
               <span className="text-sm lg:text-lg">John Doe</span>
             </NavLink>
