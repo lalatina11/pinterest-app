@@ -12,7 +12,7 @@ interface Props {
 
 const Avatar = (props: Props) => {
   return (
-    <AvatarShadcn>
+    <AvatarShadcn className={props.className || "w-8 h-8"}>
       <AvatarImage
         className={props.className || "w-8 h-8"}
         src={props.avatarUrl}
