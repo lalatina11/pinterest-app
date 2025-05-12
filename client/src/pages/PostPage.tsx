@@ -1,15 +1,13 @@
+import BackButton from "@/components/BackButton";
 import Comments from "@/components/Comments";
 import Gallery from "@/components/Gallery";
 import ImageRenderer from "@/components/Gallery/ImageRenderer";
 import Metadata from "@/components/Metadata";
 import PostInterraction from "@/components/PostInterraction";
-import { Button } from "@/components/ui/button";
 import Avatar from "@/components/UserMenu/Avatar";
-import { ArrowLeft } from "lucide-react";
-import { NavLink, useNavigate, useParams } from "react-router";
+import { NavLink, useParams } from "react-router";
 
 const PostPage = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
 
   return (
@@ -18,9 +16,7 @@ const PostPage = () => {
       <div className="flex flex-col gap-16">
         <div className="flex flex-col md:flex-row gap-6 justify-between">
           <div className="flex-0 lg:flex-0">
-            <Button onClick={() => navigate(-1)}>
-              <ArrowLeft />
-            </Button>
+            <BackButton />
           </div>
           <div className="flex-1/3 lg:flex-1/3">
             <ImageRenderer
