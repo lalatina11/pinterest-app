@@ -12,13 +12,13 @@ interface Props {
 
 const Avatar = (props: Props) => {
   return (
-    <AvatarShadcn className={props.className || "w-8 h-8"}>
+    <AvatarShadcn className={props.className || "w-8 h-8 object-cover"}>
       <AvatarImage
-        className={props.className || "w-8 h-8"}
+        className={props.className || "w-8 h-8 object-cover"}
         src={props.avatarUrl}
       />
       <AvatarFallback>
-        <RxAvatar className={props.className || "w-8 h-8"} />
+        <RxAvatar className={props.className || "w-8 h-8 object-cover"} />
       </AvatarFallback>
     </AvatarShadcn>
   );
