@@ -7,6 +7,10 @@ button {
   cursor: pointer;
 }
 
+.Card {
+  @apply bg-zinc-200/50 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 shadow-md border border-zinc-500;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
