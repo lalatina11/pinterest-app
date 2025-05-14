@@ -21,7 +21,7 @@ const LoginForm = (props: Props) => {
           className="w-full h-auto object-cover"
         />
         <CardTitle className="text-nowrap">
-          <span>Login to your account</span>
+          <span>Masuk ke akun Anda</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="w-full">
@@ -39,23 +39,23 @@ const LoginForm = (props: Props) => {
         </span>
         <form className="space-y-6" action="">
           <div className="space-y-3">
-            <Label htmlFor="identifier">Email or Username</Label>
+            <Label htmlFor="identifier">Email atau Username</Label>
             <Input name="identifier" id="identifier" type="text" />
           </div>
           <div className="space-y-3">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Kata Sandi</Label>
             <Input name="password" id="password" type="password" />
           </div>
           <div className="flex gap-2 items-center">
-            <span>Don&apos;t have an Account?</span>
+            <span>Belum punya akun?</span>
             <span
               className="text-blue-500 cursor-pointer"
               onClick={() => props.setType("register")}
             >
-              register here
+              daftar di sini
             </span>
           </div>
-          <Button className="w-full">Login</Button>
+          <Button className="w-full">Masuk</Button>
         </form>
       </CardContent>
     </Card>
