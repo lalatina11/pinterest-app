@@ -39,12 +39,12 @@ const RegisterForm = (props: Props) => {
         </span>
         <form className="space-y-6" action="">
           <div className="space-y-3">
-            <Label>Email</Label>
-            <Input type="email" />
+            <Label htmlFor="email">Email</Label>
+            <Input name="email" id="email" type="email" />
           </div>
           <div className="space-y-3">
-            <Label>Password</Label>
-            <Input type="password" />
+            <Label htmlFor="password">Password</Label>
+            <Input name="password" id="password" type="password" />
           </div>
           <div className="flex gap-2 items-center">
             <span>Have an Account?</span>
