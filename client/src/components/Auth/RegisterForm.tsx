@@ -14,7 +14,7 @@ interface Props {
 const RegisterForm = (props: Props) => {
   const { setTheme } = useTheme();
   return (
-    <Card className="Card w-sm max-w-sm flex justify-center items-center relative">
+    <Card className="Card w-sm max-w-sm flex justify-center items-center relative mb-10 mt-5">
       <CardHeader className="flex flex-col gap-3 justify-center items-center w-36 h-36">
         <img
           src="/public/logo-pin.svg"
@@ -39,6 +39,14 @@ const RegisterForm = (props: Props) => {
         </span>
         <form className="space-y-6" action="">
           <div className="space-y-3">
+            <Label htmlFor="username">Username</Label>
+            <Input name="username" id="username" type="text" />
+          </div>
+          <div className="space-y-3">
+            <Label htmlFor="name">Nama</Label>
+            <Input name="name" id="name" type="text" />
+          </div>
+          <div className="space-y-3">
             <Label htmlFor="email">Email</Label>
             <Input name="email" id="email" type="email" />
           </div>
@@ -55,6 +63,7 @@ const RegisterForm = (props: Props) => {
               login di sini
             </span>
           </div>
+
           <Button className="w-full">Daftar sekarang</Button>
         </form>
       </CardContent>
@@ -63,4 +72,3 @@ const RegisterForm = (props: Props) => {
 };
 
 export default RegisterForm;
-
