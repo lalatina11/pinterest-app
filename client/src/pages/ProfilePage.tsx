@@ -21,7 +21,7 @@ const ProfilePage = () => {
   const [mode, setMode] = useState<"created" | "saved">("created");
   return (
     <div className="flex flex-col gap-6 justify-center items-center w-full">
-      <Card className="flex justify-center items-center max-w-sm w-sm mx-auto">
+      <Card className="flex justify-center items-center max-w-sm w-sm mx-auto Card">
         <CardHeader className="flex flex-col gap-4 justify-center items-center w-full">
           <CardTitle>
             <Avatar avatarUrl="" className="w-14 h-14 object-cover" />
