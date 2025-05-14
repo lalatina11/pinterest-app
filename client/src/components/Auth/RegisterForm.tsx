@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTheme } from "@/lib/UseThemeContext";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Moon, Sun } from "lucide-react";
@@ -13,6 +14,8 @@ interface Props {
 
 const RegisterForm = (props: Props) => {
   const { setTheme } = useTheme();
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <Card className="Card w-sm max-w-sm flex justify-center items-center relative mb-10 mt-5">
       <CardHeader className="flex flex-col gap-3 justify-center items-center w-36 h-36">
@@ -52,7 +55,22 @@ const RegisterForm = (props: Props) => {
           </div>
           <div className="space-y-3">
             <Label htmlFor="password">Kata Sandi</Label>
-            <Input name="password" id="password" type="password" />
+            <Input
+              name="password"
+              id="password"
+              type={showPassword ? "text" : "password"}
+            />
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="checkbox"
+              name="show-password"
+              id="show-password"
+              onChange={(e) => setShowPassword(e.currentTarget.checked)}
+            />
+            <Label className="text-sm text-nowrap" htmlFor="show-password">
+              Tampilkan Kata Sandi
+            </Label>
           </div>
           <div className="flex gap-2 items-center">
             <span>Sudah punya akun?</span>
@@ -63,7 +81,6 @@ const RegisterForm = (props: Props) => {
               login di sini
             </span>
           </div>
-
           <Button className="w-full">Daftar sekarang</Button>
         </form>
       </CardContent>
