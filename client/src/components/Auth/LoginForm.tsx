@@ -39,8 +39,8 @@ const LoginForm = (props: Props) => {
         </span>
         <form className="space-y-6" action="">
           <div className="space-y-3">
-            <Label htmlFor="email">Email</Label>
-            <Input name="email" id="email" type="email" />
+            <Label htmlFor="identifier">Email or Username</Label>
+            <Input name="identifier" id="identifier" type="text" />
           </div>
           <div className="space-y-3">
             <Label htmlFor="password">Password</Label>
