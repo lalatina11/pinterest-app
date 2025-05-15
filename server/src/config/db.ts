@@ -1,14 +1,13 @@
-import mongoose, { type Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
-const connectDB = async (): Promise<Mongoose> => {
+const connectDB = async (): Promise<void> => {
     try {
         const url = process.env.MONGO_URL;
         if (!url) throw new Error("No MONGO_URL in .env file");
+        mongoose.connect(url)
         console.log("DB connection success");
-        return await mongoose.connect(url);
-    } catch (error: any) {
-        console.log(error.message);
-        throw error;
+    } catch (error) {
+        console.log((error as Error).message);
     }
 };
 
