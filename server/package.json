@@ -5,7 +5,7 @@
   "main": "src/",
   "private": true,
   "scripts": {
-    "dev":"bun --watch src/ --env-file=.env"
+    "dev": "bun --watch src/ --env-file=.env"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -14,6 +14,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@types/express": "^5.0.1",
     "express": "^5.1.0"
   }
 }
