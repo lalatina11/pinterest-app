@@ -1,8 +1,7 @@
 import express from "express"
+import userController from "../controller/user"
 const route = express()
 
-route.get("/register", (_, res) => {
-    res.status(201).json({ message: "user created!" })
-})
+route.post("/register", userController.register)
 
 export default route
