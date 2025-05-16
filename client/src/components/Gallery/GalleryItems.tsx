@@ -1,12 +1,12 @@
-import type { TempItems } from "@/types";
 import { CiCircleMore, CiSaveDown2 } from "react-icons/ci";
 import { FaShareAlt } from "react-icons/fa";
 import { NavLink } from "react-router";
 import "./galleryItems.css";
 import ImageRenderer from "./ImageRenderer";
+import type { Pin } from "@/types";
 
 interface Props {
-  item: TempItems;
+  item: Pin;
   itemId: number;
 }
 const GalleryItems = (props: Props) => {
@@ -21,7 +21,7 @@ const GalleryItems = (props: Props) => {
       className="relative flex transition-all ease-in-out duration-300 cursor-pointer galleryItem"
       style={{ gridRowEnd: `span ${Math.ceil(item.height / 100)}` }}
     >
-      <ImageRenderer imageUrl={item.imageUrl} height={optimizeHeight} />
+      <ImageRenderer imageUrl={item.media} height={optimizeHeight} />
       <NavLink
         className="overlay absolute top-0 w-full h-full"
         to={`/pin/${itemId}`}

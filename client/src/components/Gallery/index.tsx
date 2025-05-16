@@ -1,7 +1,8 @@
-import type { TempItems } from "@/types";
+import type { Pin } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import GalleryItems from "./GalleryItems";
+
 const Gallery = () => {
   const { error, isPending, data } = useQuery({
     queryKey: ["pins"],
@@ -19,7 +20,7 @@ const Gallery = () => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
-      {data.map((data: TempItems, i: number) => (
+      {data.map((data: Pin, i: number) => (
         <GalleryItems item={data} itemId={i + 1} key={i} />
       ))}
     </div>

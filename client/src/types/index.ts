@@ -17,3 +17,19 @@ export interface TempItems {
     width: number;
     height: number;
 }
+
+export interface Pin {
+  _id: string;
+  board: string;
+  createdAt: string;
+  description: string;
+  height: number;
+  link: string;
+  media: string;
+  tags: string[];
+  title: string;
+  updatedAt: string;
+  user: string;
+  width: number;
+  __v: number;
+}
