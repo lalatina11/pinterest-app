@@ -10,7 +10,7 @@ const Gallery = () => {
       const { data: axiosData } = await axios.get(
         import.meta.env.VITE_API_KEY + "/api/pins"
       );
-      return axiosData.data;
+      return axiosData.data as Pin[];
     },
   });
 
@@ -20,8 +20,8 @@ const Gallery = () => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
-      {data.map((data: Pin, i: number) => (
-        <GalleryItems item={data} itemId={i + 1} key={i} />
+      {data.map((data, i: number) => (
+        <GalleryItems item={data} itemId={data._id || 0} key={i} />
       ))}
     </div>
   );

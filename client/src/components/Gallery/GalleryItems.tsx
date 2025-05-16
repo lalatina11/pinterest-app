@@ -7,7 +7,7 @@ import type { Pin } from "@/types";
 
 interface Props {
   item: Pin;
-  itemId: number;
+  itemId: string | number;
 }
 const GalleryItems = (props: Props) => {
   const { item, itemId } = props;
