@@ -46,8 +46,8 @@ const userController = {
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: user.email,
-                subject: "Your OTP Code",
-                text: `Your OTP code for Candra Social is: ${otp}`,
+                subject: "Kode OTP untuk Candra Pin",
+                text: `Kode verifikasi anda adalah: ${otp}`,
             });
         }
 
