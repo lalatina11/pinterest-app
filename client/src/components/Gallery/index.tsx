@@ -20,8 +20,8 @@ const Gallery = () => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
-      {data.map((data, i: number) => (
-        <GalleryItems item={data} itemId={data._id || 0} key={i} />
+      {data.map((data) => (
+        <GalleryItems item={data} itemId={data._id || 0} key={data._id} />
       ))}
     </div>
   );
