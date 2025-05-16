@@ -19,6 +19,10 @@ const userSchema = new Schema({
     avatar: {
         type: String,
     },
+    isAuthenticated: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true })
 
 const User = model("User", userSchema)

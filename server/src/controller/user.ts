@@ -1,8 +1,9 @@
 import type { Request, Response } from "express";
+import jwt from "jsonwebtoken"
 
 import asyncHandler from "../middlewares/asyncHandler";
 import type { UserType } from "../types";
-import { hashSync } from "bcrypt-ts";
+import { compareSync, hashSync } from "bcrypt-ts";
 import User from "../models/user";
 import { otp, otpStore, transporter } from "../libs";
 
@@ -38,7 +39,7 @@ const userController = {
 
         const user = await User.create({ username, email, name, password: hashedPassword });
 
-        (await user).save()
+        user.save()
 
         if (user) {
             otpStore.set(user.email, otp);
@@ -52,7 +53,44 @@ const userController = {
         }
 
 
-        res.status(201).json({ message: "Pendaftaran berhasil, kami telah mengirimkan kode OTP ke email Anda, silakan verifikasi", user, error: false })
+        res.status(201).json({ message: "Pendaftaran berhasil, kami telah mengirimkan kode OTP ke email Anda, silakan verifikasi", error: false })
+    }),
+    login: asyncHandler(async (req, res) => {
+        const identifier = req.body.identifier as UserType['username'] | UserType["email"]
+        const password = req.body.password as UserType["password"]
+
+        if (!identifier) throw new Error("Silahkan masukkan Password")
+        if (!password) throw new Error("Silahkan masukkan Password")
+
+        const existingUser = await User.findOne({ $or: [{ username: identifier, email: identifier }] })
+        if (!existingUser) throw new Error("User tidak ditemukan")
+
+        if (!existingUser.password) throw new Error("Sepertinya anda mendaftar dengan platform google atau github, silahkan login dengan platform tersebut")
+
+        const validPassword = compareSync(password, existingUser.password)
+
+        if (!validPassword) throw new Error("Password yang anda masukkan tidak valid")
+
+        if (!existingUser.isAuthenticated) {
+            otpStore.set(existingUser.email, otp);
+
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: existingUser.email,
+                subject: "Kode OTP untuk Candra Pin",
+                text: `Kode verifikasi anda adalah: ${otp}`,
+            });
+            throw new Error("user not authenticated");
+        }
+
+        const token = jwt.sign({ id: existingUser._id }, process.env.SECRET_KEY || "".toString(), {
+            expiresIn: "1h",
+        });
+
+
+        res.cookie('token', token, {
+            path: "/", httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax"
+        }).status(200).send({ message: "Login berhasil!", error: false })
     })
 }
 export default userController
