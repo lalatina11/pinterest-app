@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 
-const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) => {
+const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void|Response>) => {
     return (req: Request, res: Response, next: NextFunction) => {
         fn(req, res, next).catch((error: Error) => {
             res.status(400).json({
