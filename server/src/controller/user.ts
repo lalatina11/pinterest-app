@@ -53,7 +53,7 @@ const userController = {
         }
 
 
-        res.status(201).json({ message: "Pendaftaran berhasil, kami telah mengirimkan kode OTP ke email Anda, silakan verifikasi", error: false })
+        res.status(201).json({ message: "Pendaftaran berhasil, kami telah mengirimkan kode verifikasi, cek kotak pesan email atau spam dan verifikasi", error: false })
     }),
     login: asyncHandler(async (req, res) => {
         const identifier = req.body.identifier as UserType['username'] | UserType["email"]
@@ -62,7 +62,7 @@ const userController = {
         if (!identifier) throw new Error("Silahkan masukkan Password")
         if (!password) throw new Error("Silahkan masukkan Password")
 
-        const existingUser = await User.findOne({ $or: [{ username: identifier, email: identifier }] })
+        const existingUser = await User.findOne({ $or: [{ username: identifier }, { email: identifier }] })
         if (!existingUser) throw new Error("User tidak ditemukan")
 
         if (!existingUser.password) throw new Error("Sepertinya anda mendaftar dengan platform google atau github, silahkan login dengan platform tersebut")
@@ -80,7 +80,7 @@ const userController = {
                 subject: "Kode OTP untuk Candra Pin",
                 text: `Kode verifikasi anda adalah: ${otp}`,
             });
-            throw new Error("user not authenticated");
+            return res.status(400).json({ message: "Akun anda belum terverifikasi, silahkan verifikasi terlebih dahulu, kami sudah mengirimkan kode verifikasi, cek kotak pesan email atau spam", isVerified: false, error: true })
         }
 
         const token = jwt.sign({ id: existingUser._id }, process.env.SECRET_KEY || "".toString(), {
