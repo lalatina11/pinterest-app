@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
-import asyncHandler from "../middlewares/asyncHandler";
-import type { UserType } from "../types";
 import { compareSync, hashSync } from "bcrypt-ts";
-import User from "../models/user";
 import { otp, otpStore, transporter } from "../libs";
+import asyncHandler from "../middlewares/asyncHandler";
+import User from "../models/user";
+import type { UserType } from "../types";
 
 const userController = {
     register: asyncHandler(async (req: Request, res: Response) => {
@@ -87,10 +87,31 @@ const userController = {
             expiresIn: "1h",
         });
 
-
         res.cookie('token', token, {
             path: "/", httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax"
         }).status(200).send({ message: "Login berhasil!", error: false })
+    }),
+    verifyOtp: asyncHandler(async (req, res) => {
+        const { identifier, otp } = req.body
+
+        if (!identifier || !otp) {
+            throw new Error("Email atau Username dan OTP diperlukan");
+        }
+
+        const existingUser = await User.findOne({ $or: [{ username: identifier }, { email: identifier }] })
+        if (!existingUser) throw new Error("User tidak ditemukan")
+
+        const storedOtp = otpStore.get(existingUser.email);
+        if (!storedOtp || storedOtp !== otp) {
+            throw new Error("OTP Tidak valid");
+        }
+
+        const updatedUser = await User.updateOne({ $or: [{ username: identifier }, { email: identifier }] }, { $set: { isAuthenticated: true } })
+
+        if (!updatedUser) throw new Error("Terjadi kesalahan, silahkan cobalagi")
+
+        res.status(200).send({ message: "Verifikasi berhasil, Anda sekarang dapat login!", error: false })
+
     })
 }
 export default userController
