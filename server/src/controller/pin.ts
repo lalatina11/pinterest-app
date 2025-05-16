@@ -20,9 +20,13 @@ const pinController = {
         const pin = await newPin.save()
         res.status(201).send({ message: "Pin created successfully", data: pin, error: false })
     }),
-    getAallPins: asyncHandler(async (_, res) => {
-        const pins = await Pin.find()
-        res.status(200).send({ message: "OK", data: pins, error: false })
+    getAallPins: asyncHandler(async (req, res) => {
+        const pageNumber = Number(req.query.cursor) || 0
+        const limit = 21
+        const pins = await Pin.find().limit(limit).skip(pageNumber * limit)
+        const hasNextPage = pins.length === limit
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        res.status(200).send({ message: "OK", data: pins, nextCursor: hasNextPage ? pageNumber + 1 : null, error: false })
     })
 }
 

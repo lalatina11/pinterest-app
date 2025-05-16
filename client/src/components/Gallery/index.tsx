@@ -1,29 +1,54 @@
 import type { Pin } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import GalleryItems from "./GalleryItems";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Gallery = () => {
-  const { error, isPending, data } = useQuery({
+  const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
     queryKey: ["pins"],
-    queryFn: async () => {
+    queryFn: async ({ pageParam }) => {
       const { data: axiosData } = await axios.get(
-        import.meta.env.VITE_API_KEY + "/api/pins"
+        import.meta.env.VITE_API_KEY + `/api/pins?cursor=${pageParam}`
       );
-      return axiosData.data as Pin[];
+      return axiosData;
     },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 
-  if (error) return error.message;
+  if (status === "pending")
+    return <h1 className="flex justify-center items-center">Loading</h1>;
+  if (status === "error")
+    return (
+      <h1 className="flex justify-center items-center">An error occured</h1>
+    );
 
-  if (isPending) return <h1>Loading</h1>;
+  const allPins =
+    data.pages.flatMap((page) => page.data as Pin[]) || ([] as Pin[]);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
-      {data.map((data) => (
-        <GalleryItems item={data} itemId={data._id || 0} key={data._id} />
-      ))}
-    </div>
+    <InfiniteScroll
+      dataLength={allPins.length}
+      next={fetchNextPage}
+      hasMore={!!hasNextPage}
+      loader={
+        <h1 className="flex justify-center items-center my-6">
+          Memuat Postingan lain
+        </h1>
+      }
+      endMessage={
+        <h1 className="flex justify-center items-center my-6">
+          Semua Postingan telah dimuat
+        </h1>
+      }
+    >
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
+        {allPins.map((data) => (
+          <GalleryItems item={data} itemId={data._id || 0} key={data._id} />
+        ))}
+      </div>
+    </InfiniteScroll>
   );
 };
 
