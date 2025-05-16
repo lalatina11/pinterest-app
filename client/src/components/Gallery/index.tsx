@@ -1,15 +1,20 @@
 import type { Pin } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import GalleryItems from "./GalleryItems";
 import InfiniteScroll from "react-infinite-scroll-component";
+import GalleryItems from "./GalleryItems";
 
-const Gallery = () => {
+interface Props {
+  searchKeyword?: string | null;
+}
+
+const Gallery = (props: Props) => {
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
     queryKey: ["pins"],
     queryFn: async ({ pageParam }) => {
       const { data: axiosData } = await axios.get(
-        import.meta.env.VITE_API_KEY + `/api/pins?cursor=${pageParam}`
+        import.meta.env.VITE_API_KEY +
+          `/api/pins?cursor=${pageParam}&q=${props.searchKeyword || ""}`
       );
       return axiosData;
     },

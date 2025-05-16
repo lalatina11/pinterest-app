@@ -1,12 +1,24 @@
 import { FaSearch } from "react-icons/fa";
 import { Input } from "../ui/input";
 import UserMenu from "../UserMenu";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 const TopBar = () => {
+  const nav = useNavigate();
   return (
     <div className="my-4 flex items-center gap-4">
       {/* SEARCH */}
-      <div className="relative flex-1">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const inputVal = new FormData(e.currentTarget).get("inputVal");
+          nav(`search?q=${inputVal}`);
+          toast("search for " + inputVal);
+          e.currentTarget.reset();
+        }}
+        className="relative flex-1"
+      >
         <button className="absolute top-3 left-4">
           <FaSearch />
         </button>
@@ -14,10 +26,10 @@ const TopBar = () => {
           type="text"
           className="px-12"
           placeholder="Search.."
-          name=""
-          id=""
+          name="inputVal"
+          id="inputVal"
         />
-      </div>
+      </form>
       {/* USER */}
       <UserMenu />
     </div>
