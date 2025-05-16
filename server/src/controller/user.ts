@@ -4,6 +4,7 @@ import asyncHandler from "../middlewares/asyncHandler";
 import type { UserType } from "../types";
 import { hashSync } from "bcrypt-ts";
 import User from "../models/user";
+import { otp, otpStore, transporter } from "../libs";
 
 const userController = {
     register: asyncHandler(async (req: Request, res: Response) => {
@@ -35,11 +36,23 @@ const userController = {
 
         const hashedPassword = hashSync(password, 12)
 
-        const user = await User.create({ username, email, name, password: hashedPassword })
+        const user = await User.create({ username, email, name, password: hashedPassword });
 
-            ; (await user).save()
+        (await user).save()
 
-        res.status(201).json({ message: "user created", user, error: false })
+        if (user) {
+            otpStore.set(user.email, otp);
+
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: user.email,
+                subject: "Your OTP Code",
+                text: `Your OTP code for Candra Social is: ${otp}`,
+            });
+        }
+
+
+        res.status(201).json({ message: "Pendaftaran berhasil, kami telah mengirimkan kode OTP ke email Anda, silakan verifikasi", user, error: false })
     })
 }
 export default userController
