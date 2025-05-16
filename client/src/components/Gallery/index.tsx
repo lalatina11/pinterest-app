@@ -6,10 +6,10 @@ const Gallery = () => {
   const { error, isPending, data } = useQuery({
     queryKey: ["pins"],
     queryFn: async () => {
-      const { data } = await axios.get(
+      const { data:axiosData } = await axios.get(
         import.meta.env.VITE_API_KEY + "/api/pins"
       );
-      return data;
+      return axiosData.data;
     },
   });
 
@@ -17,11 +17,9 @@ const Gallery = () => {
 
   if (isPending) return <h1>Loading</h1>;
 
-  const pins = data.data;
-
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
-      {pins.map((data: TempItems, i: number) => (
+      {data.map((data: TempItems, i: number) => (
         <GalleryItems item={data} itemId={i + 1} key={i} />
       ))}
     </div>
