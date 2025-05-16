@@ -15,8 +15,10 @@
   },
   "dependencies": {
     "@types/express": "^5.0.1",
+    "@types/nodemailer": "^6.4.17",
     "bcrypt-ts": "^7.0.0",
     "express": "^5.1.0",
-    "mongoose": "^8.14.3"
+    "mongoose": "^8.14.3",
+    "nodemailer": "^7.0.3"
   }
 }
