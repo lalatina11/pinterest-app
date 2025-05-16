@@ -1,10 +1,27 @@
-import { tempItems } from "@/lib/dummyData";
+import type { TempItems } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import GalleryItems from "./GalleryItems";
-
 const Gallery = () => {
+  const { error, isPending, data } = useQuery({
+    queryKey: ["pins"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        import.meta.env.VITE_API_KEY + "/api/pins"
+      );
+      return data;
+    },
+  });
+
+  if (error) return error;
+
+  if (isPending) return <h1>Loading</h1>;
+
+  const pins = data.data;
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
-      {tempItems.map((data, i) => (
+      {pins.map((data: TempItems, i: number) => (
         <GalleryItems item={data} itemId={i + 1} key={i} />
       ))}
     </div>
