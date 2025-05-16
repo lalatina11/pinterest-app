@@ -5,5 +5,6 @@ const route = express()
 route.post("/register", userController.register)
 route.post("/login", userController.login)
 route.post("/verify", userController.verifyOtp)
+route.post("/logout", userController.logout)
 
 export default route

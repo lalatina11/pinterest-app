@@ -112,6 +112,10 @@ const userController = {
 
         res.status(200).send({ message: "Verifikasi berhasil, Anda sekarang dapat login!", error: false })
 
+    }),
+    logout: asyncHandler(async (_, res) => {
+        res.clearCookie("token")
+        res.status(200).json({ message: "Logout Berhasil", error: false })
     })
 }
 export default userController
