@@ -13,25 +13,29 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import Layout from "./Layout/index.tsx";
 import AuthLayout from "./Layout/AuthLayout.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <Routes>
-          <Route element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="/create" element={<CreatePage />} />
-            <Route path="/pin/:id" element={<PostPage />} />
-            <Route path="/profile/:username" element={<ProfilePage />} />
-            <Route path="/search" element={<SearchPage />} />
-          </Route>
-          <Route element={<AuthLayout />}>
-            <Route path="/auth" element={<AuthPage />} />
-          </Route>
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-        <ToasterProvider />
-      </ThemeProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+          <Routes>
+            <Route element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="/create" element={<CreatePage />} />
+              <Route path="/pin/:id" element={<PostPage />} />
+              <Route path="/profile/:username" element={<ProfilePage />} />
+              <Route path="/search" element={<SearchPage />} />
+            </Route>
+            <Route element={<AuthLayout />}>
+              <Route path="/auth" element={<AuthPage />} />
+            </Route>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+          <ToasterProvider />
+        </ThemeProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   </StrictMode>
 );
