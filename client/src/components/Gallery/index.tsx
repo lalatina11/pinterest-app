@@ -6,14 +6,14 @@ const Gallery = () => {
   const { error, isPending, data } = useQuery({
     queryKey: ["pins"],
     queryFn: async () => {
-      const { data:axiosData } = await axios.get(
+      const { data: axiosData } = await axios.get(
         import.meta.env.VITE_API_KEY + "/api/pins"
       );
       return axiosData.data;
     },
   });
 
-  if (error) return error;
+  if (error) return error.message;
 
   if (isPending) return <h1>Loading</h1>;
 
