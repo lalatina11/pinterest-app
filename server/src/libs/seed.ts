@@ -22,7 +22,7 @@ const seedDB = async () => {
             username: `user${i}`,
             email: `user${i}@example.com`,
             password: hashedPassword,
-            img: `https://picsum.photos/id/${i}/200/200`,
+            avatar: `https://picsum.photos/id/${i}/200/200`,
         });
         users.push(await user.save());
     }

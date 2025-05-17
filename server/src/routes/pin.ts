@@ -4,5 +4,6 @@ const route = express()
 
 route.post("/create", pinController.create)
 route.get("/", pinController.getAallPins)
+route.get("/:id", pinController.getPin)
 
 export default route

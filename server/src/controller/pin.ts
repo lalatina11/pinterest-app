@@ -29,6 +29,11 @@ const pinController = {
         const hasNextPage = pins.length === limit
         // await new Promise(resolve => setTimeout(resolve, 1000))
         res.status(200).send({ message: "OK", data: pins, nextCursor: hasNextPage ? pageNumber + 1 : null, error: false })
+    }),
+    getPin: asyncHandler(async (req, res) => {
+        const { id } = req.params
+        const pin = await Pin.findById(id).populate("user", "username avatar name")
+        res.status(200).json({ message: "ok", data: pin, error: false })
     })
 }
 
