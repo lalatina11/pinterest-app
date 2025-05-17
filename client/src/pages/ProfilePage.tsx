@@ -10,6 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { apiRequest } from "@/lib";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { CiCircleMore } from "react-icons/ci";
 import { FaShareAlt } from "react-icons/fa";
@@ -19,17 +21,41 @@ import { toast } from "sonner";
 const ProfilePage = () => {
   const { username } = useParams();
   const [mode, setMode] = useState<"created" | "saved">("created");
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["user", username],
+    queryFn: async () => {
+      const { data } = await apiRequest.get("/api/users/" + username);
+      return data;
+    },
+  });
+
+  if (isLoading)
+    return (
+      <h1 className="flex justify-center items-center text-xl font-semibold">
+        Loading...
+      </h1>
+    );
+  if (error)
+    return (
+      <h1 className="flex justify-center items-center text-xl font-semibold">
+        {error.message}
+      </h1>
+    );
+
   return (
     <div className="flex flex-col gap-6 justify-center items-center w-full">
       <Card className="flex justify-center items-center max-w-sm w-sm mx-auto Card">
         <CardHeader className="flex flex-col gap-4 justify-center items-center w-full">
           <CardTitle>
-            <Avatar avatarUrl="" className="w-14 h-14 object-cover" />
+            <Avatar
+              avatarUrl={data.user.avatar}
+              className="w-14 h-14 object-cover"
+            />
           </CardTitle>
-          <CardDescription>{username}</CardDescription>
+          <CardDescription>{data.user.name}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p>@{username}</p>
+          <p>@{data.user.username}</p>
         </CardContent>
         <CardFooter className="flex w-full justify-around gap-4 items-center">
           <Button
@@ -75,7 +101,11 @@ const ProfilePage = () => {
         </span>
       </div>
       <div className="my-4">
-        {mode === "created" ? <Gallery /> : <Collection />}
+        {mode === "created" ? (
+          <Gallery userId={data.user._id} />
+        ) : (
+          <Collection />
+        )}
       </div>
     </div>
   );

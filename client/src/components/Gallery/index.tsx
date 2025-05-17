@@ -6,15 +6,18 @@ import GalleryItems from "./GalleryItems";
 
 interface Props {
   searchKeyword?: string | null;
+  userId?: string | null;
 }
 
 const Gallery = (props: Props) => {
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
-    queryKey: ["pins"],
+    queryKey: ["pins", props.searchKeyword, props.userId],
     queryFn: async ({ pageParam }) => {
       const { data: axiosData } = await axios.get(
         import.meta.env.VITE_API_KEY +
-          `/api/pins?cursor=${pageParam}&q=${props.searchKeyword || ""}`
+          `/api/pins?cursor=${pageParam}&q=${
+            props.searchKeyword || ""
+          }&userId=${props.userId || ""}`
       );
       return axiosData;
     },

@@ -116,6 +116,15 @@ const userController = {
     logout: asyncHandler(async (_, res) => {
         res.clearCookie("token")
         res.status(200).json({ message: "Logout Berhasil", error: false })
+    }),
+    getUser: asyncHandler(async (req, res) => {
+        const { username } = req.params
+        const user = await User.findOne({ username })
+        if (!user) {
+            throw new Error("User Not Found")
+        }
+        const { password, ...allUserInfoWithoutPassword } = user.toObject()
+        res.status(200).send({ message: "ok", user: allUserInfoWithoutPassword, error: false })
     })
 }
 export default userController
