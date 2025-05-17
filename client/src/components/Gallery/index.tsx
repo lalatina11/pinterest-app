@@ -7,6 +7,7 @@ import GalleryItems from "./GalleryItems";
 interface Props {
   searchKeyword?: string | null;
   userId?: string | null;
+  boardId?: string | null;
 }
 
 const Gallery = (props: Props) => {
@@ -17,7 +18,7 @@ const Gallery = (props: Props) => {
         import.meta.env.VITE_API_KEY +
           `/api/pins?cursor=${pageParam}&q=${
             props.searchKeyword || ""
-          }&userId=${props.userId || ""}`
+          }&userId=${props.userId || ""}&boardId=${props.boardId || ""}`
       );
       return axiosData;
     },
@@ -51,7 +52,7 @@ const Gallery = (props: Props) => {
         </h1>
       }
     >
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px]">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 auto-rows-[10px] p-2 lg:p-4">
         {allPins.map((data) => (
           <GalleryItems item={data} itemId={data._id || 0} key={data._id} />
         ))}

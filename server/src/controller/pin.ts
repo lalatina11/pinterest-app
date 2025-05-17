@@ -24,8 +24,9 @@ const pinController = {
         const pageNumber = Number(req.query.cursor) || 0
         const searchKeyword = req.query.q || ""
         const userId = req.query.userId
+        const boardId = req.query.boardId
         const limit = 21
-        const pins = await Pin.find(searchKeyword ? { $or: [{ title: { $regex: searchKeyword || "", $options: "i" } }, { tags: { $in: [searchKeyword] } }] } : userId ? { user: userId } : {}).limit(limit).skip(pageNumber * limit)
+        const pins = await Pin.find(searchKeyword ? { $or: [{ title: { $regex: searchKeyword || "", $options: "i" } }, { tags: { $in: [searchKeyword] } }] } : userId ? { user: userId } : boardId ? { board: boardId } : {}).limit(limit).skip(pageNumber * limit)
 
         const hasNextPage = pins.length === limit
         // await new Promise(resolve => setTimeout(resolve, 1000))

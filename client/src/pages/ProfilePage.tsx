@@ -1,4 +1,4 @@
-import Collection from "@/components/Collection";
+import Boards from "@/components/Boards";
 import Gallery from "@/components/Gallery";
 import Avatar from "@/components/UserMenu/Avatar";
 import { Button } from "@/components/ui/button";
@@ -104,7 +104,7 @@ const ProfilePage = () => {
         {mode === "created" ? (
           <Gallery userId={data.user._id} />
         ) : (
-          <Collection />
+          <Boards userId={data.user._id} />
         )}
       </div>
     </div>
