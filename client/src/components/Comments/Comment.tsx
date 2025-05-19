@@ -1,12 +1,13 @@
 import { NavLink } from "react-router";
 import Avatar from "@/components/UserMenu/Avatar";
 import { type Comment as CommentType } from "@/types/";
+import { format } from "timeago.js";
 
 interface Props {
   comment: CommentType;
 }
 
- const Comment = (props: Props) => {
+const Comment = (props: Props) => {
   const { comment } = props;
   return (
     <div key={comment._id}>
@@ -15,11 +16,13 @@ interface Props {
           <Avatar avatarUrl={comment.user.avatar} />
           <span>{comment.user.name}</span>
         </NavLink>
-        <span className="text-xs text-zinc-500">1h Ago</span>
+        <span className="text-xs text-zinc-500">
+          {format(comment.createdAt)}
+        </span>
       </div>
       <span className="text-xs lg:text-sm">{comment.description}</span>
       <hr className="h-[1px] my-2 bg-zinc-500" />
     </div>
   );
 };
-export default Comment
+export default Comment;
