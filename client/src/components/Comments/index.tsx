@@ -1,33 +1,18 @@
-import EmojiPicker from "emoji-picker-react";
 import Avatar from "@/components/UserMenu/Avatar";
+import { apiRequest } from "@/lib";
+import { useQuery } from "@tanstack/react-query";
+import EmojiPicker from "emoji-picker-react";
 import { SendHorizontal, SmilePlus } from "lucide-react";
+import { useState } from "react";
 import { NavLink } from "react-router";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "@/lib";
+import { type Comment as CommentType } from "@/types";
+import Comment from "./Comment";
 
 interface Props {
   pinId: string;
-}
-
-interface User {
-  avatar: string;
-  name: string;
-  username: string;
-  _id: string;
-}
-
-interface Comment {
-  createdAt: string;
-  description: string;
-  pin: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-  user: User;
 }
 
 const Comments = (props: Props) => {
@@ -39,7 +24,7 @@ const Comments = (props: Props) => {
       const { data } = await apiRequest.get(
         "/api/comments?pinId=" + props.pinId
       );
-      return data.data as Comment[];
+      return data.data as CommentType[];
     },
   });
 
@@ -57,20 +42,7 @@ const Comments = (props: Props) => {
           <span className="text-zinc-500 mb-4">Comments</span>
         </span>
         {data.map((comment) => (
-          <div key={comment._id}>
-            <div className="flex gap-2 items-center justify-between pr-0 md:pr-5 lg:pr-10">
-              <NavLink
-                to={`/profile/johndoe`}
-                className="flex gap-2 items-center"
-              >
-                <Avatar avatarUrl={comment.user.avatar} />
-                <span>{comment.user.name}</span>
-              </NavLink>
-              <span className="text-xs text-zinc-500">1h Ago</span>
-            </div>
-            <span className="text-xs lg:text-sm">{comment.description}</span>
-            <hr className="h-[1px] my-2 bg-zinc-500" />
-          </div>
+          <Comment comment={comment} key={comment._id} />
         ))}
       </div>
       <div className="w-full h-[1px] mb-4 bg-zinc-500" />

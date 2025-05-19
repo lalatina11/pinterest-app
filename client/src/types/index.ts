@@ -19,17 +19,34 @@ export interface TempItems {
 }
 
 export interface Pin {
-  _id: string;
-  board: string;
-  createdAt: string;
-  description: string;
-  height: number;
-  link: string;
-  media: string;
-  tags: string[];
-  title: string;
-  updatedAt: string;
-  user: string;
-  width: number;
-  __v: number;
+    _id: string;
+    board: string;
+    createdAt: string;
+    description: string;
+    height: number;
+    link: string;
+    media: string;
+    tags: string[];
+    title: string;
+    updatedAt: string;
+    user: string;
+    width: number;
+    __v: number;
+}
+
+export interface User {
+    avatar: string;
+    name: string;
+    username: string;
+    _id: string;
+}
+
+export interface Comment {
+    createdAt: string;
+    description: string;
+    pin: string;
+    updatedAt: string;
+    __v: number;
+    _id: string;
+    user: User;
 }
