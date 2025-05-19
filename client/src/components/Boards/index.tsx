@@ -50,10 +50,10 @@ const Boards = (props: Props) => {
         <NavLink
           to={`/search?boardId=${board._id}`}
           key={board._id}
-          className="flex flex-col gap-2"
+          className="flex flex-col gap-2 justify-between"
         >
           <ImageRenderer
-            className="w-full h-auto object-cover rounded-md"
+            className="w-full h-auto object-cover rounded-md flex-1"
             imageUrl={board.firstPin.media}
           />
           <div className="flex flex-col">
