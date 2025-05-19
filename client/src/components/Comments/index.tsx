@@ -8,7 +8,7 @@ import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 const Comments = () => {
   const [emojiPicker, setEmojiPicker] = useState(false);
-  // const [Emoji, setEmoji] = useState("");
+  const [comments, setComments] = useState("");
   const comment = {
     count: 1,
     text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Commodi, accusantium! Reiciendis saepe, a obcaecati enim accusantium expedita eum sint itaque in doloribus totam dignissimos quia tempora. Illum culpa qui quis.",
@@ -51,12 +51,19 @@ const Comments = () => {
           <Textarea
             className="ring ring-zinc-500"
             placeholder="Berikan Komentar..."
+            onChange={(e) => setComments(e.target.value)}
+            value={comments}
           />
           <div
             hidden={!emojiPicker}
             className="absolute z-10 bottom-[110%] right-10 md:right-16"
           >
-            <EmojiPicker className="" />
+            <EmojiPicker
+              className=""
+              onEmojiClick={(e) => {
+                setComments((prev) => prev + e.emoji.toString());
+              }}
+            />
           </div>
           <span
             onClick={() => setEmojiPicker((prev) => !prev)}
