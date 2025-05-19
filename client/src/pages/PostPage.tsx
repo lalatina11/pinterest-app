@@ -55,7 +55,7 @@ const PostPage = () => {
               <span className="text-sm lg:text-lg">{data.user.name}</span>
             </NavLink>
             <div className="w-full h-[1px] bg-zinc-500" />
-            <Comments />
+            <Comments pinId={id || ""} />
           </div>
         </div>
         <div className="w-full h-[1px] bg-zinc-500" />

@@ -6,34 +6,72 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
-const Comments = () => {
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib";
+
+interface Props {
+  pinId: string;
+}
+
+interface User {
+  avatar: string;
+  name: string;
+  username: string;
+  _id: string;
+}
+
+interface Comment {
+  createdAt: string;
+  description: string;
+  pin: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+  user: User;
+}
+
+const Comments = (props: Props) => {
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [comments, setComments] = useState("");
-  const comment = {
-    count: 1,
-    text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Commodi, accusantium! Reiciendis saepe, a obcaecati enim accusantium expedita eum sint itaque in doloribus totam dignissimos quia tempora. Illum culpa qui quis.",
-  };
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["comments", props.pinId],
+    queryFn: async () => {
+      const { data } = await apiRequest.get(
+        "/api/comments?pinId=" + props.pinId
+      );
+      return data.data as Comment[];
+    },
+  });
+
+  if (isLoading) return <h1>Loading...</h1>;
+  if (error) return <h1>{error.message}</h1>;
+
+  if (!data) return <h1>Belum ada komentar di postingan ini</h1>;
+
   return (
     <div className="flex-1 flex flex-col gap-6 md:gap-0 h-full justify-between">
       {/* Commnents List */}
-      <div className="flex flex-col gap-2 max-h-[100vh] p-2 md:max-h-[40vh] lg:max-h-[100vh] overflow-y-scroll">
+      <div className="flex flex-col gap-2 max-h-[100vh] p-2 md:max-h-[40vh] lg:max-h-[100vh] overflow-y-auto h-full">
         <span className="text-xs lg:text-sm flex gap-2">
-          1<span className="text-zinc-500 mb-4">Comments</span>
+          {data.length || 0}
+          <span className="text-zinc-500 mb-4">Comments</span>
         </span>
-        <>
-          <div className="flex gap-2 items-center justify-between pr-0 md:pr-5 lg:pr-10">
-            <NavLink
-              to={`/profile/johndoe`}
-              className="flex gap-2 items-center"
-            >
-              <Avatar avatarUrl="" />
-              <span>John Doe</span>
-            </NavLink>
-            <span className="text-xs text-zinc-500">1h Ago</span>
+        {data.map((comment) => (
+          <div key={comment._id}>
+            <div className="flex gap-2 items-center justify-between pr-0 md:pr-5 lg:pr-10">
+              <NavLink
+                to={`/profile/johndoe`}
+                className="flex gap-2 items-center"
+              >
+                <Avatar avatarUrl={comment.user.avatar} />
+                <span>{comment.user.name}</span>
+              </NavLink>
+              <span className="text-xs text-zinc-500">1h Ago</span>
+            </div>
+            <span className="text-xs lg:text-sm">{comment.description}</span>
+            <hr className="h-[1px] my-2 bg-zinc-500" />
           </div>
-          <span className="text-xs lg:text-sm">{comment.text}</span>
-          <hr className="h-[1px] bg-zinc-500" />
-        </>
+        ))}
       </div>
       <div className="w-full h-[1px] mb-4 bg-zinc-500" />
       {/* Add Comment */}
