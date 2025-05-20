@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { registerValidator } from "@/lib/formValidator";
 import { useTheme } from "@/lib/UseThemeContext";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import type { UserAuthForm } from "@/types";
 import { Moon, Sun } from "lucide-react";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { useState, type FormEventHandler } from "react";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { apiRequest } from "@/lib";
 
 interface Props {
   setType: React.Dispatch<
@@ -15,6 +19,35 @@ interface Props {
 const RegisterForm = (props: Props) => {
   const { setTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(
+        new FormData(e.currentTarget).entries()
+      ) as UserAuthForm["register"];
+      registerValidator(body);
+      const res = await fetch(
+        import.meta.env.VITE_API_KEY + "/api/users/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+      toast(
+        "Pendaftaran berhasil, Kami telah mengirimkan kode otp, silahkan verifikasi"
+      );
+      sessionStorage.setItem("identifier", body.username || "");
+      props.setType("verify");
+      const { data } = await res.json();
+      if (data.error) {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      toast((error as Error).message);
+    }
+  };
 
   return (
     <Card className="Card w-sm max-w-sm flex justify-center items-center relative mb-10 mt-5">
@@ -40,7 +73,7 @@ const RegisterForm = (props: Props) => {
         >
           <Sun />
         </span>
-        <form className="space-y-6" action="">
+        <form onSubmit={handleSubmit} className="space-y-6" action="">
           <div className="space-y-3">
             <Label htmlFor="username">Username</Label>
             <Input name="username" id="username" type="text" />
