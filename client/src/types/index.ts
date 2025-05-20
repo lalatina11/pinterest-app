@@ -50,3 +50,12 @@ export interface Comment {
     _id: string;
     user: User;
 }
+
+export interface UserAuthForm {
+    register: {
+        username?: string;
+        password?: string;
+        email?: string;
+        name?: string;
+    }
+}
