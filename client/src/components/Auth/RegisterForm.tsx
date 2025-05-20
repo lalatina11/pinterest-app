@@ -27,23 +27,15 @@ const RegisterForm = (props: Props) => {
         new FormData(e.currentTarget).entries()
       ) as UserAuthForm["register"];
       registerValidator(body);
-      const res = await fetch(
-        import.meta.env.VITE_API_KEY + "/api/users/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
+      const { data } = await apiRequest.post("/api/users/register", body);
+      if (data.error) {
+        throw new Error(data.message);
+      }
       toast(
         "Pendaftaran berhasil, Kami telah mengirimkan kode otp, silahkan verifikasi"
       );
       sessionStorage.setItem("identifier", body.username || "");
       props.setType("verify");
-      const { data } = await res.json();
-      if (data.error) {
-        throw new Error(data.message);
-      }
     } catch (error) {
       toast((error as Error).message);
     }
