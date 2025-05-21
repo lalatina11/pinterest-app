@@ -6,9 +6,16 @@ import { useState, type FormEventHandler } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import AuthOption from "./AuthOption";
 
 const LoginForm = () => {
   const { setTheme } = useTheme();
@@ -125,6 +132,9 @@ const LoginForm = () => {
           </Button>
         </form>
       </CardContent>
+      <CardFooter>
+        <AuthOption />
+      </CardFooter>
     </Card>
   );
 };
