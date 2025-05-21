@@ -24,7 +24,7 @@ const VerifyForm = (props: Props) => {
   };
 
   useEffect(() => {
-    if (!sessionStorage.getItem("identifierUser")) {
+    if (!sessionStorage.getItem("identifier")) {
       setType("login");
     }
   }, [setType]);
