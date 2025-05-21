@@ -88,7 +88,7 @@ const userController = {
         });
 
         res.cookie('token', token, {
-            path: "/", httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax"
+            path: "/", httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 7 * 24 * 60 * 60 * 1000
         }).status(200).send({ message: "Login berhasil!", error: false })
     }),
     verifyOtp: asyncHandler(async (req, res) => {
