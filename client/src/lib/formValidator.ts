@@ -26,3 +26,15 @@ export const registerValidator = (body: UserAuthForm['register']) => {
         throw new Error("Password harus mengandung minimal 8 karakter, terdiri dari huruf besar, huruf kecil, dan angka!");
     }
 }
+
+
+export const loginValidator = (body: UserAuthForm['login']) => {
+    const { identifier, password } = body
+    if (!identifier || identifier.trim().length < 6) {
+        throw new Error("Harap isi username atau email dengan benar");
+    }
+
+    if (!password || password.trim().length < 6) {
+        throw new Error("Password harus diisi minimal 6 karakter!");
+    }
+}

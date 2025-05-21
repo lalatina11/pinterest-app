@@ -57,5 +57,10 @@ export interface UserAuthForm {
         password?: string;
         email?: string;
         name?: string;
+    },
+    login: {
+        identifier?: string;
+        password?: string;
+
     }
 }

@@ -1,10 +1,14 @@
+import { loginValidator } from "@/lib/formValidator";
 import { useTheme } from "@/lib/UseThemeContext";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import type { UserAuthForm } from "@/types";
 import { Moon, Sun } from "lucide-react";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { useState, type FormEventHandler } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 interface Props {
   setType: React.Dispatch<
@@ -15,6 +19,55 @@ interface Props {
 const LoginForm = (props: Props) => {
   const { setTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (
+    e
+  ): Promise<void> => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const form = e.currentTarget;
+      const body = Object.fromEntries(
+        new FormData(form).entries()
+      ) as UserAuthForm["login"];
+      loginValidator(body);
+
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_API_KEY || "http://localhost:3030"
+        }/api/users/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+          credentials: "include",
+        }
+      );
+      const result = await res.json();
+      if (result.error) {
+        if (result.isVerified === false) {
+          sessionStorage.setItem("identifier", body.identifier || "");
+          props.setType("verify");
+          setIsLoading(false);
+          throw new Error(result.message);
+        } else {
+          setIsLoading(false);
+          throw new Error(result.message);
+        }
+      }
+
+      setIsLoading(false);
+      navigate("/");
+    } catch (err) {
+      toast((err as Error).message);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Card className="Card w-sm max-w-sm flex justify-center items-center relative">
@@ -40,7 +93,7 @@ const LoginForm = (props: Props) => {
         >
           <Sun />
         </span>
-        <form className="space-y-6" action="">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-3">
             <Label htmlFor="identifier">Email atau Username</Label>
             <Input name="identifier" id="identifier" type="text" />
@@ -73,7 +126,9 @@ const LoginForm = (props: Props) => {
               daftar di sini
             </span>
           </div>
-          <Button className="w-full">Masuk</Button>
+          <Button disabled={isLoading} className="w-full">
+            Masuk
+          </Button>
         </form>
       </CardContent>
     </Card>
