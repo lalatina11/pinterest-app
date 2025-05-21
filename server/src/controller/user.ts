@@ -117,7 +117,7 @@ const userController = {
         res.clearCookie("token")
         res.status(200).json({ message: "Logout Berhasil", error: false })
     }),
-    getUser: asyncHandler(async (req, res) => {
+    getLoggedInUser: asyncHandler(async (req, res) => {
         const { username } = req.params
         const user = await User.findOne({ username })
         if (!user) {
