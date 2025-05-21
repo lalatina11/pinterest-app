@@ -38,3 +38,13 @@ export const loginValidator = (body: UserAuthForm['login']) => {
         throw new Error("Password harus diisi minimal 6 karakter!");
     }
 }
+
+export const verifyOtpValidator = (body: UserAuthForm['verify']) => {
+    const { otp, identifier } = body
+    if (!identifier || identifier.trim().length < 6) {
+        throw new Error("Harap isi username atau email dengan benar");
+    }
+    if (!otp || otp.trim().length < 6 || !+otp) {
+        throw new Error("OTP hanya bisa diisi 6 digit angka");
+    }
+}

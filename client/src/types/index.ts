@@ -62,5 +62,9 @@ export interface UserAuthForm {
         identifier?: string;
         password?: string;
 
+    },
+    verify: {
+        identifier?: string;
+        otp?: string;
     }
 }
