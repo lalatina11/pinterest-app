@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { apiRequest } from "@/lib";
+import type { AxiosError } from "axios";
 
 interface Props {
   setType: React.Dispatch<
@@ -19,10 +20,12 @@ interface Props {
 const RegisterForm = (props: Props) => {
   const { setTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       const body = Object.fromEntries(
         new FormData(e.currentTarget).entries()
       ) as UserAuthForm["register"];
@@ -36,8 +39,16 @@ const RegisterForm = (props: Props) => {
       );
       sessionStorage.setItem("identifier", body.username || "");
       props.setType("verify");
-    } catch (error) {
-      toast((error as Error).message);
+      setIsLoading(false);
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      if (error.response && error.response.data?.message) {
+        toast(error.response.data.message);
+      } else {
+        toast("Something went wrong");
+      }
+
+      setIsLoading(false);
     }
   };
 
@@ -106,7 +117,9 @@ const RegisterForm = (props: Props) => {
               login di sini
             </span>
           </div>
-          <Button className="w-full">Daftar sekarang</Button>
+          <Button disabled={isLoading} className="w-full">
+            Daftar sekarang
+          </Button>
         </form>
       </CardContent>
     </Card>
