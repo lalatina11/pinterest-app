@@ -123,6 +123,9 @@ const userController = {
         if (!user) {
             throw new Error("User Not Found")
         }
+
+        if (!user.isAuthenticated) throw new Error("User is not verified yet")
+
         const { password, ...allUserInfoWithoutPassword } = user.toObject()
         res.status(200).send({ message: "ok", user: allUserInfoWithoutPassword, error: false })
     })
