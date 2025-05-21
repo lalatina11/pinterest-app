@@ -10,13 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-interface Props {
-  setType: React.Dispatch<
-    React.SetStateAction<"login" | "register" | "verify">
-  >;
-}
-
-const LoginForm = (props: Props) => {
+const LoginForm = () => {
   const { setTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,9 +46,9 @@ const LoginForm = (props: Props) => {
       if (result.error) {
         if (result.isVerified === false) {
           sessionStorage.setItem("identifier", body.identifier || "");
-          props.setType("verify");
           setIsLoading(false);
-          throw new Error(result.message);
+          toast(result.message);
+          return navigate("/auth?type=verify");
         } else {
           setIsLoading(false);
           throw new Error(result.message);
@@ -121,7 +115,7 @@ const LoginForm = (props: Props) => {
             <span>Belum punya akun?</span>
             <span
               className="text-blue-500 cursor-pointer"
-              onClick={() => props.setType("register")}
+              onClick={() => navigate("/auth?type=register")}
             >
               daftar di sini
             </span>

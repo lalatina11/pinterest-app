@@ -1,18 +1,21 @@
 import LoginForm from "@/components/Auth/LoginForm";
 import RegisterForm from "@/components/Auth/RegisterForm";
 import VerifyForm from "@/components/Auth/VerifyForm";
-import { useState } from "react";
-
+import { Navigate, useSearchParams } from "react-router";
+type AuthPage = "login" | "register" | "verify" | string | null | undefined;
 const AuthPage = () => {
-  const [type, setType] = useState<"login" | "register" | "verify">("login");
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get("type") as AuthPage;
   return (
     <main className="min-h-screen overflow-y-auto flex justify-center items-center">
       {type === "login" ? (
-        <LoginForm setType={setType} />
+        <LoginForm />
       ) : type === "register" ? (
-        <RegisterForm setType={setType} />
+        <RegisterForm />
+      ) : type === "verify" ? (
+        <VerifyForm />
       ) : (
-        <VerifyForm setType={setType} />
+        <Navigate to={"/auth?type=login"} />
       )}
     </main>
   );

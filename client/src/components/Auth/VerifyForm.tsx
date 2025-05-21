@@ -9,15 +9,10 @@ import {
   InputOTPSlot,
 } from "../ui/input-otp";
 import { Label } from "../ui/label";
+import { useNavigate } from "react-router";
 
-interface Props {
-  setType: React.Dispatch<
-    React.SetStateAction<"login" | "register" | "verify">
-  >;
-}
-
-const VerifyForm = (props: Props) => {
-  const { setType } = props;
+const VerifyForm = () => {
+  const navigate = useNavigate();
   const handleSubmitForm: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     toast(new FormData(e.currentTarget).get("OTP")?.toString());
@@ -25,9 +20,9 @@ const VerifyForm = (props: Props) => {
 
   useEffect(() => {
     if (!sessionStorage.getItem("identifier")) {
-      setType("login");
+      navigate("/auth?type=login");
     }
-  }, [setType]);
+  }, [navigate]);
 
   return (
     <Card className="Card">

@@ -10,18 +10,13 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { apiRequest } from "@/lib";
 import type { AxiosError } from "axios";
+import { useNavigate } from "react-router";
 
-interface Props {
-  setType: React.Dispatch<
-    React.SetStateAction<"login" | "register" | "verify">
-  >;
-}
-
-const RegisterForm = (props: Props) => {
+const RegisterForm = () => {
   const { setTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     try {
@@ -38,7 +33,7 @@ const RegisterForm = (props: Props) => {
         "Pendaftaran berhasil, Kami telah mengirimkan kode otp, silahkan verifikasi"
       );
       sessionStorage.setItem("identifier", body.username || "");
-      props.setType("verify");
+      navigate("/auth?type=verify");
       setIsLoading(false);
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
@@ -112,7 +107,7 @@ const RegisterForm = (props: Props) => {
             <span>Sudah punya akun?</span>
             <span
               className="text-blue-500 cursor-pointer"
-              onClick={() => props.setType("login")}
+              onClick={() => navigate("/auth?type=login")}
             >
               login di sini
             </span>
