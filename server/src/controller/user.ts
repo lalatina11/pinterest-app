@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 
 import { compareSync, hashSync } from "bcrypt-ts";
 import { otp, otpStore, transporter } from "../libs";
@@ -118,8 +118,11 @@ const userController = {
         res.status(200).json({ message: "Logout Berhasil", error: false })
     }),
     getLoggedInUser: asyncHandler(async (req, res) => {
-        const { username } = req.params
-        const user = await User.findOne({ username })
+        const token = req.cookies.token
+
+        if (!token) throw new Error("user tidak terauthentifikasi")
+        const { id } = jwt.verify(token, process.env.SECRET_KEY || "") as JwtPayload
+        const user = await User.findOne({ _id: id })
         if (!user) {
             throw new Error("User Not Found")
         }
@@ -177,7 +180,7 @@ const userController = {
 
         let user = await User.findOne({ email })
 
-        const body = { username, email, name: username, avatar: avatar_url };
+        const body = { username, email, name: username, avatar: avatar_url,isAuthenticated:true };
 
         if (!user) {
             user = await User.create(body)
