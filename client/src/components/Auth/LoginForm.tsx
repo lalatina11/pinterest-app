@@ -16,12 +16,13 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import AuthOption from "./AuthOption";
+import { useAuthStore } from "@/utils/zustandStores";
 
 const LoginForm = () => {
   const { setTheme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { setCurrentUser } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (
@@ -61,7 +62,8 @@ const LoginForm = () => {
           throw new Error(result.message);
         }
       }
-
+      setCurrentUser(result.user);
+      toast(result.message);
       setIsLoading(false);
       navigate("/");
     } catch (err) {
