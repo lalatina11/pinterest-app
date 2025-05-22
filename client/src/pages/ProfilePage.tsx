@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { apiRequest } from "@/lib";
+import type { User } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { CiCircleMore } from "react-icons/ci";
@@ -24,7 +25,7 @@ const ProfilePage = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["user", username],
     queryFn: async () => {
-      const { data } = await apiRequest.get("/api/users/" + username);
+      const { data } = await apiRequest.get("/api/users/get-user/" + username);
       return data;
     },
   });
@@ -41,21 +42,21 @@ const ProfilePage = () => {
         {error.message}
       </h1>
     );
-
+  const user = data.user as User;
   return (
     <div className="flex flex-col gap-6 justify-center items-center w-full">
       <Card className="flex justify-center items-center max-w-sm w-sm mx-auto Card">
         <CardHeader className="flex flex-col gap-4 justify-center items-center w-full">
           <CardTitle>
             <Avatar
-              avatarUrl={data.user.avatar}
+              avatarUrl={user.avatar}
               className="w-14 h-14 object-cover"
             />
           </CardTitle>
-          <CardDescription>{data.user.name}</CardDescription>
+          <CardDescription>{user.name}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p>@{data.user.username}</p>
+          <p>@{user.username}</p>
         </CardContent>
         <CardFooter className="flex w-full justify-around gap-4 items-center">
           <Button
