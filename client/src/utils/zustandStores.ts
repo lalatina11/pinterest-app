@@ -4,7 +4,7 @@ type AuthStore = {
     currentUser: User | null,
     setCurrentUser: (newUser: User) => void
     removeCurrentUser: () => void
-    updateCurrentUser: (newUser: User) => void
+    updateCurrentUser: (updatedUser: User) => void
 }
 export const useAuthStore = create<AuthStore>((set) => ({
     currentUser: null,
