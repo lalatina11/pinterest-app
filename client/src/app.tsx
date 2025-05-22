@@ -19,9 +19,13 @@ const App = () => {
   useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const { data } = await apiRequest("/api/users/current-user");
-      setCurrentUser(data.user);
-      return data.user
+      try {
+        const res = await apiRequest("/api/users/current-user");
+        setCurrentUser(res.data.user);
+        return res.data.user;
+      } catch (error) {
+        return (error as Error).message;
+      }
     },
   });
   return (
