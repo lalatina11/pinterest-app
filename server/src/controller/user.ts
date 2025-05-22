@@ -180,10 +180,10 @@ const userController = {
 
         let user = await User.findOne({ email })
 
-        const body = { username, email, name: username, avatar: avatar_url,isAuthenticated:true };
+        const body = { username, email, name: username, avatar: avatar_url };
 
         if (!user) {
-            user = await User.create(body)
+            user = await User.create({ ...body, isAuthenticated: true })
         }
 
         const { _id: userIdFromDB } = user.toObject();
