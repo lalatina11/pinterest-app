@@ -21,7 +21,7 @@ const ImageRenderer = (props: Props) => {
       }
       loading="lazy"
       transformation={[{ width: width ?? 372, height: height ?? undefined }]}
-      alt="Failed to upload the image"
+      alt="Failed to get the image"
       lqip={{ active: true, quality: 20 }}
     />
   );
