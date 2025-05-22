@@ -1,4 +1,5 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { apiRequest } from "@/lib";
+import { useQuery } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { ThemeProvider } from "./components/ThemeProvider.tsx";
 import ToasterProvider from "./components/ToasterProvider.tsx";
@@ -11,30 +12,37 @@ import NotFoundPage from "./pages/NotFoundPage.tsx";
 import PostPage from "./pages/PostPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import SearchPage from "./pages/SearchPage.tsx";
-const queryClient = new QueryClient();
+import { useAuthStore } from "./utils/zustandStores.ts";
 
 const App = () => {
+  const { setCurrentUser } = useAuthStore();
+  useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const { data } = await apiRequest("/api/users/current-user");
+      setCurrentUser(data.user);
+      return data.user
+    },
+  });
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-          <Routes>
-            <Route element={<Layout />}>
-              <Route index element={<HomePage />} />
-              <Route path="/create" element={<CreatePage />} />
-              <Route path="/pin/:id" element={<PostPage />} />
-              <Route path="/profile/:username" element={<ProfilePage />} />
-              <Route path="/search" element={<SearchPage />} />
-            </Route>
-            <Route element={<AuthLayout />}>
-              <Route path="/auth" element={<AuthPage />} />
-            </Route>
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-          <ToasterProvider />
-        </ThemeProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="/create" element={<CreatePage />} />
+            <Route path="/pin/:id" element={<PostPage />} />
+            <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route path="/search" element={<SearchPage />} />
+          </Route>
+          <Route element={<AuthLayout />}>
+            <Route path="/auth" element={<AuthPage />} />
+          </Route>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        <ToasterProvider />
+      </ThemeProvider>
+    </BrowserRouter>
   );
 };
 
