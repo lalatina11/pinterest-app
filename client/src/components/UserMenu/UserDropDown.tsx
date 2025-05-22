@@ -7,8 +7,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { apiRequest } from "@/lib";
+import { useNavigate } from "react-router";
 
 const UserDropDown = () => {
+  const navigate = useNavigate();
+  const handleLogout: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    await apiRequest.post("/api/users/logout");
+    navigate("/auth?type=login");
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="border border-zinc-500 rounded-md p-1 shadow shadow-zinc-500">
@@ -19,7 +27,11 @@ const UserDropDown = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
         <DropdownMenuItem>Setting</DropdownMenuItem>
-        <DropdownMenuItem>Logout</DropdownMenuItem>
+        <DropdownMenuItem>
+          <form onSubmit={handleLogout}>
+            <button>Logout</button>
+          </form>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
