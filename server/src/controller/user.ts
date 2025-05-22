@@ -164,19 +164,20 @@ const userController = {
         const userRes = await fetch("https://api.github.com/user", {
             headers: { Authorization: `Bearer ${accessToken}` },
         });
-        const userFromGithub = await userRes.json() as { login: string, email: string };
+        const userFromGithub = await userRes.json() as { login: string, email: string, avatar_url: string };
 
         if (!userFromGithub) throw new Error("Failed to fetch user");
 
-        const { login: username, email } = userFromGithub;
+        const { login: username, email, avatar_url } = userFromGithub;
 
         if (!email || !username) {
             throw new Error("");
         }
 
+
         let user = await User.findOne({ email })
 
-        const body = { username, email, name: username };
+        const body = { username, email, name: username, avatar: avatar_url };
 
         if (!user) {
             user = await User.create(body)
