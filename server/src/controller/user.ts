@@ -2,7 +2,9 @@ import type { Request, Response } from "express";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 
 import { compareSync, hashSync } from "bcrypt-ts";
+import { google } from "googleapis";
 import { otp, otpStore, transporter } from "../libs";
+import { authorizationUrl, oAuth2Client } from "../libs/googleOauth";
 import asyncHandler from "../middlewares/asyncHandler";
 import User from "../models/user";
 import type { UserType } from "../types";
@@ -211,6 +213,63 @@ const userController = {
 
         res.redirect(frontendUrl);
 
+    }),
+    loginGoogle: asyncHandler(async (_, res) => {
+        res.redirect(authorizationUrl)
+    }),
+    googleCallback: asyncHandler(async (req, res) => {
+        const { code } = req.query; // Directly get query parameter
+        if (!code || code === "") {
+            throw new Error("Code are required!");
+        }
+        const { tokens } = await oAuth2Client.getToken(code.toString() || "");
+        oAuth2Client.setCredentials(tokens);
+        const OAuth2 = google.oauth2({
+            auth: oAuth2Client,
+            version: "v2",
+        });
+        const { data } = await OAuth2.userinfo.get();
+
+        if (!data) {
+            throw new Error("Cannot getting user data!");
+        }
+
+        const { email, name } = data;
+
+        if (!email || !name) {
+            throw new Error("Email dan Username tidak didapatkan");
+        }
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = await User.create(
+                { email, username: name, isAuthenticated: true },
+            );
+        }
+
+        const { id } = user;
+
+        if (!user.isAuthenticated) {
+            User.findByIdAndUpdate(id, { isAuthenticated: true })
+        }
+
+        const token = jwt.sign({ id }, process.env.SECRET_KEY || "".toString(), {
+            expiresIn: "30m",
+        });
+        res.cookie("token", token, {
+            path: "/",
+            httpOnly: true,
+            maxAge: 60 * 60 * 24 * 7,
+            sameSite: "lax",
+            secure: !!process.env.NODE_ENV,
+        });
+
+        const referer = req.headers.referer || req.headers.origin;
+        const frontendUrl = referer
+            ? new URL(referer).origin
+            : process.env.FRONTEND_URL || "http://localhost:5173";
+
+        res.redirect(frontendUrl);
     })
 }
 export default userController
