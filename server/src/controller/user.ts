@@ -270,6 +270,14 @@ const userController = {
             : process.env.FRONTEND_URL || "http://localhost:5173";
 
         res.redirect(frontendUrl);
+    }),
+    getUserByUsername: asyncHandler(async (req, res) => {
+        const { username } = req.params
+        if (!username || username === "") throw new Error("Username are required!")
+        const findUser = await User.findOne({ username })
+        if (!findUser) throw new Error("User tidak ditemukan")
+        const { password, ...userInfoWithoutPassword } = findUser.toObject()
+        res.status(200).json({ message: "OK", user: userInfoWithoutPassword, error: false })
     })
 }
 export default userController
