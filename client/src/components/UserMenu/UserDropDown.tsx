@@ -8,19 +8,23 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { apiRequest } from "@/lib";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useAuthStore } from "@/utils/zustandStores";
 
 const UserDropDown = () => {
   const navigate = useNavigate();
-  const { removeCurrentUser } = useAuthStore();
+  const { removeCurrentUser, currentUser } = useAuthStore();
   const handleLogout: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    await apiRequest.post("/api/users/logout");
-    removeCurrentUser();
-    toast("Logout berhasil!");
-    navigate("/auth?type=login");
+    try {
+      await apiRequest.post("/api/users/logout");
+      removeCurrentUser();
+      toast("Logout berhasil!");
+      navigate("/auth?type=login");
+    } catch (error) {
+      toast((error as Error).message);
+    }
   };
   return (
     <DropdownMenu>
@@ -30,7 +34,9 @@ const UserDropDown = () => {
       <DropdownMenuContent className="shadow-md shadow-zinc-500 border border-zinc-500">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>
+          <NavLink to={"/profile/" + currentUser?.username}>Profile</NavLink>
+        </DropdownMenuItem>
         <DropdownMenuItem>Setting</DropdownMenuItem>
         <DropdownMenuItem>
           <form onSubmit={handleLogout}>
