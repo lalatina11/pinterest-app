@@ -36,6 +36,13 @@ const Gallery = (props: Props) => {
   const allPins =
     data.pages.flatMap((page) => page.data as Pin[]) || ([] as Pin[]);
 
+  if (allPins.length < 1)
+    return (
+      <h1 className="flex justify-center items-center text-lg font-semibold">
+        Belum ada Postingan
+      </h1>
+    );
+
   return (
     <InfiniteScroll
       dataLength={allPins.length}

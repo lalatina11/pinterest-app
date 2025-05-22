@@ -41,12 +41,19 @@ const Boards = (props: Props) => {
       </h1>
     );
 
-  console.log(data);
+  const boards = data.boards as Board[];
+
+  if (boards.length < 1 || !data.board)
+    return (
+      <h1 className="flex justify-center items-center">
+        Pengguna Belum memiliki Postingan yang disimpan
+      </h1>
+    );
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4">
       {/* Collections */}
-      {data.boards.map((board: Board) => (
+      {boards.map((board: Board) => (
         <NavLink
           to={`/search?boardId=${board._id}`}
           key={board._id}
