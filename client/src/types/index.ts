@@ -29,7 +29,7 @@ export interface Pin {
     tags: string[];
     title: string;
     updatedAt: string;
-    user: string;
+    user: User
     width: number;
     __v: number;
 }

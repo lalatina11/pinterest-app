@@ -1,5 +1,5 @@
 import Avatar from "@/components/UserMenu/Avatar";
-import { useAuthStore } from "@/utils/zustandStores";
+import { useAuthStore, useCommentStore } from "@/utils/zustandStores";
 import EmojiPicker from "emoji-picker-react";
 import { SendHorizontal, SmilePlus } from "lucide-react";
 import { useState, type FormEventHandler } from "react";
@@ -8,30 +8,17 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { apiRequest } from "@/lib";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { Comment } from "@/types";
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
 interface FormCommentBody {
   pin: string;
   description: string;
 }
 
-// interface CreateCommentResponse {
-//   message: string;
-//   comment: {
-//     _id: string;
-//     pin: string;
-//     user: string;
-//     description: string;
-//     createdAt: string;
-//     updatedAt: string;
-//     // any other fields
-//   };
-//   error: boolean;
-// }
-
 const addComments = async ({ pin, description }: FormCommentBody) => {
   const body = { pin, description };
   const { data } = await apiRequest.post("/api/comments/create", body);
-  return data.data;
+  return data.data as Comment;
 };
 
 interface Props {
@@ -43,35 +30,45 @@ const AddCommentForm = (props: Props) => {
   const [description, setDescription] = useState("");
   const { currentUser } = useAuthStore();
   const { pinId: pin } = props;
-  const { invalidateQueries } = useQueryClient();
+  const { setComment } = useCommentStore();
+  // const { invalidateQueries } = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationFn: async ({ pin, description }: FormCommentBody) => {
-      return await addComments({ pin, description });
-    },
-    onSuccess: (data) => {
-      console.log("data= " + data);
-      invalidateQueries({
-        queryKey: ["comments", props.pinId],
-      });
-      setDescription("");
-      toast("Komentar berhasil ditambahkan!");
-      setEmojiPicker(false);
-    },
-    onError: (error) => {
-      console.error("error= " + (error as Error));
-      setDescription("");
-      setEmojiPicker(false);
-      toast("Gagal menambahkan komentar!");
-    },
-  });
+  // const { mutate } = useMutation({
+  //   mutationFn: async ({ pin, description }: FormCommentBody) => {
+  //     return await addComments({ pin, description });
+  //   },
+  //   onSuccess: (data) => {
+  //     console.log("data= " + data);
+  //     invalidateQueries({
+  //       queryKey: ["comments", props.pinId],
+  //     });
+  //     setDescription("");
+  //     toast("Komentar berhasil ditambahkan!");
+  //     setEmojiPicker(false);
+  //   },
+  //   onError: (error) => {
+  //     console.error("error= " + (error as Error));
+  //     setDescription("");
+  //     setEmojiPicker(false);
+  //     toast("Gagal menambahkan komentar!");
+  //   },
+  // });
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    if (description.trim().length < 1) {
-      return toast("Tuliskan sesuatu");
+    try {
+      if (description.trim().length < 1) {
+        return toast("Tuliskan sesuatu");
+      }
+      const comment = await addComments({ pin, description });
+      if (!comment) throw new Error("Gagal menambahkan komentar");
+      setComment(comment);
+    } catch (error) {
+      toast((error as Error).message);
     }
-    mutate({ pin, description });
   };
+
+  console.log(currentUser);
+  
 
   return (
     <div className="flex gap-2">
