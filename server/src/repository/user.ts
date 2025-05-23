@@ -12,6 +12,6 @@ export const userRepository = {
 
         if (!user.isAuthenticated) throw new Error("User is not verified yet")
         const { _id } = user.toObject()
-        return { id: _id.toString(), user: user }
+        return { id: _id.toString(), user: user.toObject() }
     }
 }

@@ -9,7 +9,7 @@ const commentController = {
         const { pin, description } = req.body as CommentType
         const user = await userRepository.getUserByToken(token)
         if ((pin as unknown as string).trim().length < 1 || user.id.trim().length < 1 || description.trim().length < 1) throw new Error("Please input all fields")
-        const newComment = await Comment.create({ pin, user: user.id, description })
+        const newComment = await (await Comment.create({ pin, user: user.id, description })).populate("user", "username avatar name")
         res.status(201).json({ message: "OK", data: newComment, error: false })
     }),
     getAllCommentsByPinId: asyncHandler(async (req, res) => {

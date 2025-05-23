@@ -9,68 +9,78 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { apiRequest } from "@/lib";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { Comment } from "@/types";
+
 interface FormCommentBody {
   pin: string;
   description: string;
 }
 
-// interface CreateCommentResponse {
-//   message: string;
-//   comment: {
-//     _id: string;
-//     pin: string;
-//     user: string;
-//     description: string;
-//     createdAt: string;
-//     updatedAt: string;
-//     // any other fields
-//   };
-//   error: boolean;
-// }
-
 const addComments = async ({ pin, description }: FormCommentBody) => {
   const body = { pin, description };
   const { data } = await apiRequest.post("/api/comments/create", body);
-  return data.data;
+  return data.data as Comment;
 };
 
 interface Props {
   pinId: string;
 }
 
-const AddCommentForm = (props: Props) => {
+const AddCommentForm = ({ pinId: pin }: Props) => {
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [description, setDescription] = useState("");
   const { currentUser } = useAuthStore();
-  const { pinId: pin } = props;
-  const { invalidateQueries } = useQueryClient();
+  const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationFn: async ({ pin, description }: FormCommentBody) => {
-      return await addComments({ pin, description });
+  const mutation = useMutation({
+    mutationFn: async ({
+      pin,
+      description,
+    }: {
+      pin: string;
+      description: string;
+    }) => await addComments({ pin, description }),
+    onMutate: async (newComment) => {
+      await queryClient.cancelQueries({ queryKey: ["comments", pin] });
+
+      const previousComments = queryClient.getQueryData<Comment[]>([
+        "comments",
+        pin,
+      ]);
+
+      queryClient.setQueryData<Comment[]>(["comments", pin], (old) => [
+        {
+          _id: Date.now().toString(),
+          description: newComment.description,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          pin: newComment.pin,
+          user: currentUser,
+          __v: 0, // ← Add this to satisfy the type
+        },
+        ...(old ?? []),
+      ]);
+
+      return { previousComments };
     },
-    onSuccess: (data) => {
-      console.log("data= " + data);
-      invalidateQueries({
-        queryKey: ["comments", props.pinId],
-      });
-      setDescription("");
-      toast("Komentar berhasil ditambahkan!");
-      setEmojiPicker(false);
-    },
-    onError: (error) => {
-      console.error("error= " + (error as Error));
-      setDescription("");
-      setEmojiPicker(false);
+    onError: (_, __, context) => {
+      queryClient.setQueryData(["comments", pin], context?.previousComments);
       toast("Gagal menambahkan komentar!");
     },
+    onSuccess: () => {
+      toast("Komentar berhasil ditambahkan!");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments", pin] });
+    },
   });
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     if (description.trim().length < 1) {
       return toast("Tuliskan sesuatu");
     }
-    mutate({ pin, description });
+    mutation.mutate({ pin, description });
   };
 
   return (
@@ -93,7 +103,6 @@ const AddCommentForm = (props: Props) => {
           className="absolute z-10 bottom-[110%] right-10 md:right-16"
         >
           <EmojiPicker
-            className=""
             onEmojiClick={(e) => {
               setDescription((prev) => prev + e.emoji.toString());
             }}

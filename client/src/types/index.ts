@@ -29,7 +29,7 @@ export interface Pin {
     tags: string[];
     title: string;
     updatedAt: string;
-    user: string;
+    user: User
     width: number;
     __v: number;
 }
@@ -46,7 +46,7 @@ export interface Comment {
     description: string;
     pin: string;
     updatedAt: string;
-    __v: number;
+    __v?: number;
     _id: string;
     user: User;
 }
