@@ -50,10 +50,7 @@ const RegisterForm = () => {
   return (
     <Card className="Card w-sm max-w-sm flex justify-center items-center relative mb-10 mt-5">
       <CardHeader className="flex flex-col gap-3 justify-center items-center w-36 h-36">
-        <img
-          src="/public/logo-pin.svg"
-          className="w-full h-auto object-cover"
-        />
+        <img src="/logo-pin.svg" className="w-full h-auto object-cover" />
         <CardTitle className="text-nowrap">
           <span>Daftarkan akun Anda</span>
         </CardTitle>
