@@ -1,3 +1,4 @@
 pnpm*
 bun*
 yarn*
+node_modules
