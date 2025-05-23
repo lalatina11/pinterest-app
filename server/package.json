@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "bun --watch src/ --env-file=.env",
     "build": "tsc",
-    "start": "node --watch dist/ --env-file=.env"
+    "start": "node dist/ --env-file=.env"
   },
   "devDependencies": {
     "@types/bun": "latest"
