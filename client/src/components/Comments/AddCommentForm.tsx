@@ -2,16 +2,76 @@ import Avatar from "@/components/UserMenu/Avatar";
 import { useAuthStore } from "@/utils/zustandStores";
 import EmojiPicker from "emoji-picker-react";
 import { SendHorizontal, SmilePlus } from "lucide-react";
-import { useState } from "react";
+import { useState, type FormEventHandler } from "react";
 import { NavLink } from "react-router";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
+import { apiRequest } from "@/lib";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+interface FormCommentBody {
+  pin: string;
+  description: string;
+}
 
-const AddCommentForm = () => {
+// interface CreateCommentResponse {
+//   message: string;
+//   comment: {
+//     _id: string;
+//     pin: string;
+//     user: string;
+//     description: string;
+//     createdAt: string;
+//     updatedAt: string;
+//     // any other fields
+//   };
+//   error: boolean;
+// }
+
+const addComments = async ({ pin, description }: FormCommentBody) => {
+  const body = { pin, description };
+  const { data } = await apiRequest.post("/api/comments/create", body);
+  return data.data;
+};
+
+interface Props {
+  pinId: string;
+}
+
+const AddCommentForm = (props: Props) => {
   const [emojiPicker, setEmojiPicker] = useState(false);
-  const [comments, setComments] = useState("");
+  const [description, setDescription] = useState("");
   const { currentUser } = useAuthStore();
+  const { pinId: pin } = props;
+  const { invalidateQueries } = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: async ({ pin, description }: FormCommentBody) => {
+      return await addComments({ pin, description });
+    },
+    onSuccess: (data) => {
+      console.log("data= " + data);
+      invalidateQueries({
+        queryKey: ["comments", props.pinId],
+      });
+      setDescription("");
+      toast("Komentar berhasil ditambahkan!");
+      setEmojiPicker(false);
+    },
+    onError: (error) => {
+      console.error("error= " + (error as Error));
+      setDescription("");
+      setEmojiPicker(false);
+      toast("Gagal menambahkan komentar!");
+    },
+  });
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    if (description.trim().length < 1) {
+      return toast("Tuliskan sesuatu");
+    }
+    mutate({ pin, description });
+  };
 
   return (
     <div className="flex gap-2">
@@ -20,16 +80,13 @@ const AddCommentForm = () => {
       </NavLink>
       <form
         className="flex justify-between flex-1 gap-3 relative max-h-12"
-        onSubmit={(e) => {
-          e.preventDefault();
-          toast("Komentar berhasil ditambahkan");
-        }}
+        onSubmit={handleSubmit}
       >
         <Textarea
           className="ring ring-zinc-500"
           placeholder="Berikan Komentar..."
-          onChange={(e) => setComments(e.target.value)}
-          value={comments}
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
         />
         <div
           hidden={!emojiPicker}
@@ -38,7 +95,7 @@ const AddCommentForm = () => {
           <EmojiPicker
             className=""
             onEmojiClick={(e) => {
-              setComments((prev) => prev + e.emoji.toString());
+              setDescription((prev) => prev + e.emoji.toString());
             }}
           />
         </div>
@@ -48,7 +105,7 @@ const AddCommentForm = () => {
         >
           <SmilePlus />
         </span>
-        <Button>
+        <Button disabled={description.trim().length < 1}>
           <SendHorizontal />
         </Button>
       </form>

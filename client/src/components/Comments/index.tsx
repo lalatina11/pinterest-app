@@ -9,6 +9,7 @@ interface Props {
 }
 
 const Comments = (props: Props) => {
+
   const { data, error, isLoading } = useQuery({
     queryKey: ["comments", props.pinId],
     queryFn: async () => {
@@ -38,7 +39,7 @@ const Comments = (props: Props) => {
       </div>
       <div className="w-full h-[1px] mb-4 bg-zinc-500" />
       {/* Add Comment */}
-      <AddCommentForm />
+      <AddCommentForm pinId={props.pinId} />
     </div>
   );
 };
