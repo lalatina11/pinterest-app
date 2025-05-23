@@ -62,13 +62,15 @@ const AddCommentForm = (props: Props) => {
       const comment = await addComments({ pin, description });
       if (!comment) throw new Error("Gagal menambahkan komentar");
       setComment(comment);
+      setDescription("");
+      setEmojiPicker(false);
+      toast("commentar berhasil ditambahkan");
     } catch (error) {
+      setDescription("");
+      setEmojiPicker(false);
       toast((error as Error).message);
     }
   };
-
-  console.log(currentUser);
-  
 
   return (
     <div className="flex gap-2">
