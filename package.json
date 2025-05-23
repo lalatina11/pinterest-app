@@ -1,0 +1,27 @@
+{
+  "name": "pinterest-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:client": "cd client && bun dev",
+    "dev:server": "cd server && bun dev",
+    "dev": "concurrently \"cd client && bun dev\" \"cd server && bun dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lalatina11/pinterest-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lalatina11/pinterest-app/issues"
+  },
+  "homepage": "https://github.com/lalatina11/pinterest-app#readme",
+  "description": ""
+}
