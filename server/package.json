@@ -6,8 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch src/ --env-file=.env",
-    "build":"tsc src/index.ts",
-    "start":"node src/dist/index.js"
+    "build": "tsc src/index.ts",
+    "start": "node dist/index.js"
   },
   "devDependencies": {
     "@types/bun": "latest"
