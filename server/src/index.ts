@@ -9,8 +9,10 @@ import cors from "cors"
 
 const PORT = process.env.PORT || 3030
 const app = express()
+// ? localhost:5173 for dev
+// ? localhost:4173 for build
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || ["http://localhost:5173", "http://localhost:4173"],
     credentials: true
 }))
 app.use(cookieParser())
