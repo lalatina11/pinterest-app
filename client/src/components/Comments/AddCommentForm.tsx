@@ -1,20 +1,22 @@
-import { useState } from "react";
-import { NavLink } from "react-router";
 import Avatar from "@/components/UserMenu/Avatar";
-import { toast } from "sonner";
-import { Textarea } from "../ui/textarea";
+import { useAuthStore } from "@/utils/zustandStores";
 import EmojiPicker from "emoji-picker-react";
 import { SendHorizontal, SmilePlus } from "lucide-react";
+import { useState } from "react";
+import { NavLink } from "react-router";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
 
 const AddCommentForm = () => {
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [comments, setComments] = useState("");
+  const { currentUser } = useAuthStore();
 
   return (
     <div className="flex gap-2">
-      <NavLink to={`/profile/john`}>
-        <Avatar avatarUrl="" />
+      <NavLink to={`/profile/${currentUser?.username}`}>
+        <Avatar avatarUrl={currentUser?.avatar || ""} />
       </NavLink>
       <form
         className="flex justify-between flex-1 gap-3 relative max-h-12"

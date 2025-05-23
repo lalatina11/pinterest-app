@@ -12,7 +12,7 @@ const Comment = (props: Props) => {
   return (
     <div key={comment._id}>
       <div className="flex gap-2 items-center justify-between pr-0 md:pr-5 lg:pr-10">
-        <NavLink to={`/profile/johndoe`} className="flex gap-2 items-center">
+        <NavLink to={`/profile/${comment.user.username}`} className="flex gap-2 items-center">
           <Avatar avatarUrl={comment.user.avatar} />
           <span>{comment.user.name}</span>
         </NavLink>
