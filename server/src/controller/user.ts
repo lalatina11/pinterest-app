@@ -9,6 +9,7 @@ import { authorizationUrl, oAuth2Client } from "../libs/googleOauth";
 import asyncHandler from "../middlewares/asyncHandler";
 import User from "../models/user";
 import type { UserType } from "../types";
+import { userRepository } from "../repository/user";
 dotenv.config()
 
 const userController = {
@@ -124,16 +125,9 @@ const userController = {
     getLoggedInUser: asyncHandler(async (req, res) => {
         const token = req.cookies.token
 
-        if (!token) throw new Error("user tidak terauthentifikasi")
-        const { id } = jwt.verify(token, process.env.SECRET_KEY || "") as JwtPayload
-        const user = await User.findOne({ _id: id })
-        if (!user) {
-            throw new Error("User Not Found")
-        }
+        const { user } = await userRepository.getUserByToken(token)
 
-        if (!user.isAuthenticated) throw new Error("User is not verified yet")
-
-        const { password, ...allUserInfoWithoutPassword } = user.toObject()
+        const { password, ...allUserInfoWithoutPassword } = user
         res.status(200).send({ message: "ok", user: allUserInfoWithoutPassword, error: false })
     }),
     loginGithub: asyncHandler(async (_, res) => {
