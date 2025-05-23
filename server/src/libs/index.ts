@@ -1,5 +1,7 @@
-import nodemailer from "nodemailer";
 import { randomInt } from "crypto";
+import * as dotenv from "dotenv";
+import nodemailer from "nodemailer";
+dotenv.config()
 
 
 export const transporter = nodemailer.createTransport({

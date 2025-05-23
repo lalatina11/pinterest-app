@@ -2,12 +2,14 @@ import type { Request, Response } from "express";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 
 import { compareSync, hashSync } from "bcrypt-ts";
+import * as dotenv from "dotenv";
 import { google } from "googleapis";
 import { otp, otpStore, transporter } from "../libs";
 import { authorizationUrl, oAuth2Client } from "../libs/googleOauth";
 import asyncHandler from "../middlewares/asyncHandler";
 import User from "../models/user";
 import type { UserType } from "../types";
+dotenv.config()
 
 const userController = {
     register: asyncHandler(async (req: Request, res: Response) => {

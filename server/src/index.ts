@@ -1,11 +1,13 @@
-import express from "express"
-import userRoutes from "./routes/user"
-import pinRoutes from "./routes/pin"
-import commentRoutes from "./routes/comment"
-import boardRoute from "./routes/board"
-import connectDB from "./config/db"
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import * as dotenv from "dotenv"
+import express from "express"
+import connectDB from "./config/db"
+import boardRoute from "./routes/board"
+import commentRoutes from "./routes/comment"
+import pinRoutes from "./routes/pin"
+import userRoutes from "./routes/user"
+dotenv.config()
 
 const PORT = process.env.PORT || 3030
 const app = express()
