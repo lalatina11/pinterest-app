@@ -1,5 +1,8 @@
 import Avatar from "@/components/UserMenu/Avatar";
-import { useAuthStore, useCommentStore } from "@/utils/zustandStores";
+import { apiRequest } from "@/lib";
+import type { Comment } from "@/types";
+import { useAuthStore } from "@/utils/zustandStores";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import EmojiPicker from "emoji-picker-react";
 import { SendHorizontal, SmilePlus } from "lucide-react";
 import { useState, type FormEventHandler } from "react";
@@ -7,9 +10,6 @@ import { NavLink } from "react-router";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { apiRequest } from "@/lib";
-import type { Comment } from "@/types";
-// import { useMutation, useQueryClient } from "@tanstack/react-query";
 interface FormCommentBody {
   pin: string;
   description: string;
@@ -30,48 +30,31 @@ const AddCommentForm = (props: Props) => {
   const [description, setDescription] = useState("");
   const { currentUser } = useAuthStore();
   const { pinId: pin } = props;
-  const { setComment } = useCommentStore();
-  // const { invalidateQueries } = useQueryClient();
+  const queryClient = useQueryClient();
 
-  // const { mutate } = useMutation({
-  //   mutationFn: async ({ pin, description }: FormCommentBody) => {
-  //     return await addComments({ pin, description });
-  //   },
-  //   onSuccess: (data) => {
-  //     console.log("data= " + data);
-  //     invalidateQueries({
-  //       queryKey: ["comments", props.pinId],
-  //     });
-  //     setDescription("");
-  //     toast("Komentar berhasil ditambahkan!");
-  //     setEmojiPicker(false);
-  //   },
-  //   onError: (error) => {
-  //     console.error("error= " + (error as Error));
-  //     setDescription("");
-  //     setEmojiPicker(false);
-  //     toast("Gagal menambahkan komentar!");
-  //   },
-  // });
+  const mutation = useMutation({
+    mutationFn: addComments,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["comments", props.pinId],
+      });
+      setDescription("");
+      toast("Komentar berhasil ditambahkan!");
+      setEmojiPicker(false);
+    },
+    onError: () => {
+      setDescription("");
+      setEmojiPicker(false);
+      toast("Gagal menambahkan komentar!");
+    },
+  });
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    try {
-      if (description.trim().length < 1) {
-        return toast("Tuliskan sesuatu");
-      }
-      const comment = await addComments({ pin, description });
-      if (!comment) throw new Error("Gagal menambahkan komentar");
-      setComment(comment);
-      setDescription("");
-      setEmojiPicker(false);
-      toast("commentar berhasil ditambahkan");
-    } catch (error) {
-      setDescription("");
-      setEmojiPicker(false);
-      toast((error as Error).message);
+    if (description.trim().length < 1) {
+      return toast("Tuliskan sesuatu");
     }
+    mutation.mutate({ pin, description });
   };
-
   return (
     <div className="flex gap-2">
       <NavLink to={`/profile/${currentUser?.username}`}>

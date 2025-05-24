@@ -6,10 +6,10 @@ import Metadata from "@/components/Metadata";
 import PostInterraction from "@/components/PostInterraction";
 import Avatar from "@/components/UserMenu/Avatar";
 import { apiRequest } from "@/lib";
+import type { Pin } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { NavLink, useParams } from "react-router";
 import NotFoundPage from "./NotFoundPage";
-import type { Comment, Pin } from "@/types";
 
 const PostPage = () => {
   const { id } = useParams();
@@ -26,18 +26,6 @@ const PostPage = () => {
     },
   });
 
-  const {
-    data: commentData,
-    error: commentError,
-    isLoading,
-  } = useQuery({
-    queryKey: ["comments", id],
-    queryFn: async () => {
-      const { data } = await apiRequest.get("/api/comments?pinId=" + id);
-      return data.data as Comment[];
-    },
-  });
-
   if (isPending) {
     return <h1 className="flex justify-center items-center">Loading...</h1>;
   }
@@ -46,9 +34,6 @@ const PostPage = () => {
   }
 
   if (!pinData) return NotFoundPage();
-
-  console.log(pinData.user);
-  
 
   return (
     <>
@@ -75,13 +60,8 @@ const PostPage = () => {
               <span className="text-sm lg:text-lg">{pinData.user.name}</span>
             </NavLink>
             <div className="w-full h-[1px] bg-zinc-500" />
-            {isLoading ? (
-              <h1>Loading...</h1>
-            ) : commentError ? (
-              <h1>Error</h1>
-            ) : (
-              <Comments commentData={commentData || []} pinId={id || ""} />
-            )}
+
+            <Comments pinId={id || ""} />
           </div>
         </div>
         <div className="w-full h-[1px] bg-zinc-500" />
