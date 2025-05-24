@@ -13,6 +13,7 @@ const TopBar = () => {
         onSubmit={(e) => {
           e.preventDefault();
           const inputVal = new FormData(e.currentTarget).get("inputVal");
+          if (!inputVal || inputVal?.toString().trim().length < 1) return;
           nav(`search?q=${inputVal}`);
           toast("search for " + inputVal);
           e.currentTarget.reset();
