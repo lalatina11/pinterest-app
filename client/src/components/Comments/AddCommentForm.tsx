@@ -33,45 +33,18 @@ const AddCommentForm = ({ pinId: pin }: Props) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async ({
-      pin,
-      description,
-    }: {
-      pin: string;
-      description: string;
-    }) => await addComments({ pin, description }),
-    onMutate: async (newComment) => {
-      await queryClient.cancelQueries({ queryKey: ["comments", pin] });
+    mutationFn: addComments,
 
-      const previousComments = queryClient.getQueryData<Comment[]>([
-        "comments",
-        pin,
-      ]);
-
-      queryClient.setQueryData<Comment[]>(["comments", pin], (old) => [
-        {
-          _id: Date.now().toString(),
-          description: newComment.description,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          pin: newComment.pin,
-          user: currentUser,
-          __v: 0, // ← Add this to satisfy the type
-        },
-        ...(old ?? []),
-      ]);
-
-      return { previousComments };
-    },
-    onError: (_, __, context) => {
-      queryClient.setQueryData(["comments", pin], context?.previousComments);
+    onError: () => {
+      setDescription("");
+      setEmojiPicker(false);
       toast("Gagal menambahkan komentar!");
     },
     onSuccess: () => {
-      toast("Komentar berhasil ditambahkan!");
-    },
-    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", pin] });
+      setDescription("");
+      setEmojiPicker(false);
+      toast("Komentar berhasil ditambahkan!");
     },
   });
 
