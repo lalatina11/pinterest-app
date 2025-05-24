@@ -55,6 +55,9 @@ const AddCommentForm = (props: Props) => {
     }
     mutation.mutate({ pin, description });
   };
+
+  if(!currentUser) return null
+
   return (
     <div className="flex gap-2">
       <NavLink to={`/profile/${currentUser?.username}`}>
