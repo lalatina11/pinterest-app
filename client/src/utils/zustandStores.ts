@@ -12,7 +12,7 @@ type AuthStore = {
 
 
 
-export const useAuthStore = create<AuthStore>()(persist(
+export const useAuthStore = create((persist<AuthStore>(
     (set) => ({
         currentUser: null,
         setCurrentUser: (newUser: User) => set({ currentUser: newUser }),
@@ -21,5 +21,5 @@ export const useAuthStore = create<AuthStore>()(persist(
     }), {
     name: "user",
     storage: createJSONStorage(() => sessionStorage)
-}))
+})))
 
