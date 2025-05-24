@@ -44,10 +44,10 @@ const CreatePage = () => {
           className="max-w-sm m-auto lg:m-0 w-fit h-fit Card"
         >
           <CardContent>
-            <div className="space-y-3">
-              <Label className="w-fit mx-auto cursor-pointer" htmlFor="img">
+            <Label htmlFor="img" className="space-y-3">
+              <div className="w-fit mx-auto" >
                 <IoMdCloudUpload className="h-14 w-14" />
-              </Label>
+              </div>
               <Input
                 ref={imageInputRef}
                 onChange={(e) => {
@@ -71,7 +71,7 @@ const CreatePage = () => {
                 We recommend using high quality .jpg files less than 20 MB or
                 .mp4 files less than 200 MB.
               </span>
-            </div>
+            </Label>
           </CardContent>
         </Card>
         <div
