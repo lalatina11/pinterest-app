@@ -12,13 +12,14 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { noImageUrl } from "@/lib/dummyData";
 import { useAuthStore } from "@/utils/zustandStores";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoMdCloudUpload } from "react-icons/io";
-import { Navigate } from "react-router";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 const CreatePage = () => {
   const { currentUser } = useAuthStore();
+  const navigate = useNavigate();
   const [imagePreview, setImagePreview] = useState({
     url: "",
     width: 0,
@@ -26,16 +27,17 @@ const CreatePage = () => {
   });
 
   const imageInputRef = useRef<HTMLInputElement>(null);
-
-  if (!currentUser) {
-    toast("Silahkan Login terlebih dahulu");
-    return <Navigate to={"/auth?type=login"} />;
-  }
+  useEffect(() => {
+    if (!currentUser) {
+      toast("Silahkan Login terlebih dahulu");
+      navigate("/auth?type=login");
+    }
+  }, [currentUser, navigate]);
 
   return (
     <main className="space-y-10 pb-20">
       <div className="flex justify-between items-center p-2 border border-zinc-500">
-        <h1>Create Pin</h1>
+        <h1>Buat Pin</h1>
         <Button>Publish</Button>
       </div>
       <div className="flex flex-col lg:flex-row gap-10">
@@ -44,9 +46,10 @@ const CreatePage = () => {
           className="max-w-sm m-auto lg:m-0 w-fit h-fit Card"
         >
           <CardContent>
-            <Label htmlFor="img" className="space-y-3">
-              <div className="w-fit mx-auto" >
+            <Label htmlFor="img" className="space-y-3 flex flex-col">
+              <div className="flex flex-col justify-center items-center gap-4">
                 <IoMdCloudUpload className="h-14 w-14" />
+                <span>Klik disini untuk upload fotomu</span>
               </div>
               <Input
                 ref={imageInputRef}
@@ -67,9 +70,9 @@ const CreatePage = () => {
                 name=""
                 id="img"
               />
-              <span>
-                We recommend using high quality .jpg files less than 20 MB or
-                .mp4 files less than 200 MB.
+              <span className="text-xs text-blue-500">
+                Kami merekomendasikan menggunakan file .jpg berkualitas tinggi
+                kurang dari 20 MB atau file .mp4 kurang dari 200 MB.
               </span>
             </Label>
           </CardContent>
@@ -129,7 +132,7 @@ const CreatePage = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem disabled value=".">
-                      Choose a board
+                      Pilih board
                     </SelectItem>
                     <SelectItem value="board1">board1</SelectItem>
                     <SelectItem value="board2">board2</SelectItem>
@@ -141,7 +144,7 @@ const CreatePage = () => {
                 <Label htmlFor="tags">tags</Label>
                 <Input type="text" name="tags" id="tags" />
                 <span className="text-xs text-green-500">
-                  don't worry, poeple don't see your tags
+                  jangan khawatir, orang lain tidak akan melihat tag Anda
                 </span>
               </div>
             </form>
