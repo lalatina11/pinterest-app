@@ -12,5 +12,6 @@ route.get("/github", userController.loginGithub)
 route.get("/github/callback", userController.githubCallback)
 route.get("/google", userController.loginGoogle)
 route.get("/google/callback", userController.googleCallback)
+route.post("/follow/:username", userController.followUser)
 
 export default route

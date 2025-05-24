@@ -10,6 +10,7 @@ import asyncHandler from "../middlewares/asyncHandler";
 import User from "../models/user";
 import type { UserType } from "../types";
 import { userRepository } from "../repository/user";
+import Follow from "../models/follow";
 dotenv.config()
 
 const userController = {
@@ -273,7 +274,43 @@ const userController = {
         const findUser = await User.findOne({ username })
         if (!findUser) throw new Error("User tidak ditemukan")
         const { password, ...userInfoWithoutPassword } = findUser.toObject()
-        res.status(200).json({ message: "OK", user: userInfoWithoutPassword, error: false })
+        const followerCount = await Follow.countDocuments({ following: userInfoWithoutPassword._id })
+        const followingCount = await Follow.countDocuments({ follower: userInfoWithoutPassword._id })
+        const { token } = req.cookies
+        if (!token) {
+            return res.status(200).json({ message: "OK", user: userInfoWithoutPassword, followerCount, followingCount, isFollowing: false, error: false })
+        }
+        const { id, user } = await userRepository.getUserByToken(token)
+        if (username === user.username) {
+            return res.status(200).json({ message: "OK", user: userInfoWithoutPassword, followerCount, followingCount, isFollowing: false, error: false })
+        }
+        const isExist = await Follow.exists({ follower: id, following: userInfoWithoutPassword._id })
+        res.status(200).json({ message: "OK", user: userInfoWithoutPassword, followerCount, followingCount, isFollowing: isExist ? true : false, error: false })
+    }),
+    followUser: asyncHandler(async (req, res) => {
+        const { username } = req.params
+        const { token } = req.cookies
+        const user = await User.findOne({ username })
+        const { id, user: currentUser } = await userRepository.getUserByToken(token)
+        if (user?.username === currentUser.username) {
+            throw new Error("You can not follow or following your self")
+        }
+        const isFollowing = await Follow.exists({
+            follower: id,
+            following: user?._id
+        })
+        if (isFollowing) {
+            await Follow.deleteOne({
+                follower: id,
+                following: user?.id
+            })
+        } else {
+            await Follow.create({
+                follower: id,
+                following: user?.id
+            })
+        }
+        res.status(201).json({ message: "Successfull" })
     })
 }
 export default userController
