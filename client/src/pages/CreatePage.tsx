@@ -106,6 +106,7 @@ const CreatePage = () => {
               className="rounded-md w-full h-auto object-cover"
             />
           </Label>
+          <Button className="w-full my-2">Edit</Button>
         </div>
         <Card className="Card flex-1">
           <CardContent>
