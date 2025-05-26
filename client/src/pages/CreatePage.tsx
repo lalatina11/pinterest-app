@@ -12,14 +12,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { noImageUrl } from "@/lib/dummyData";
 import { useAuthStore } from "@/utils/zustandStores";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { IoMdCloudUpload } from "react-icons/io";
-import { useNavigate } from "react-router";
+import { Navigate } from "react-router";
 import { toast } from "sonner";
 
 const CreatePage = () => {
   const { currentUser } = useAuthStore();
-  const navigate = useNavigate();
   const [imagePreview, setImagePreview] = useState({
     url: "",
     width: 0,
@@ -27,12 +26,11 @@ const CreatePage = () => {
   });
 
   const imageInputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (!currentUser) {
-      toast("Silahkan Login terlebih dahulu");
-      navigate("/auth?type=login");
-    }
-  }, [currentUser, navigate]);
+
+  if (!currentUser) {
+    toast("Anda harus login terlebih dahulu");
+    return <Navigate to={"/auth?type=login"} />;
+  }
 
   return (
     <main className="space-y-10 pb-20">
