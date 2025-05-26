@@ -106,7 +106,20 @@ const CreatePage = () => {
               className="rounded-md w-full h-auto object-cover"
             />
           </Label>
-          <Button className="w-full my-2">Edit</Button>
+          <div className="flex gap-2 w-full">
+            <Label
+              className={
+                "flex-1/2 my-2 font-semibold tracking-wide" +
+                buttonVariants({ variant: "default" })
+              }
+              htmlFor="img"
+            >
+              Change
+            </Label>
+            <Button className="flex-1/2 my-2 font-semibold tracking-wide">
+              Edit
+            </Button>
+          </div>
         </div>
         <Card className="Card flex-1">
           <CardContent>
